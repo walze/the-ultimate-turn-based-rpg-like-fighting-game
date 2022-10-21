@@ -1,0 +1,25 @@
+module Sheet where
+
+import Weapon
+
+type SheetID = ContractId Sheet
+template Sheet with
+    name: Text
+    hp: Int
+    weapon: Weapon
+    player: Party
+    master: Party
+  where
+    ensure name /= ""
+    signatory master
+    observer player, master
+
+    postconsuming choice Attack : SheetID
+        with
+          target : SheetID
+        controller player
+        do
+          targetSheet <- fetch target
+          create this with hp = hp - targetSheet.weapon.ad
+
+

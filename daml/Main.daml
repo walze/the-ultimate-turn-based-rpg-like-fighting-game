@@ -2,52 +2,23 @@
 module Main where
 
 import Daml.Script
+import Weapon
+import Sheet
 
-template Weapon with
-    owner: Party
-    name: Text
-    ad: Int
-  where
-    signatory owner
-
-
-type SheetID = ContractId Sheet
-template Sheet with
-    name: Text
-    hp: Int
-    weapon: Weapon
-    player: Party
-    master: Party
-  where
-    ensure name /= ""
-    signatory master
-    observer player, master
-
-    choice Attack : SheetID
-        with
-          target : SheetID
-        controller player
-        do
-          targetSheet <- fetch target
-          create this with
-            hp = hp - (weapon.ad + 1)
-
-masterParty = allocateParty "master"
-
-sword = flip (`Weapon` "") 10 <$> masterParty
 
 setup : Script SheetID
 setup = script do
-  master <- masterParty
+  [master, goblin, wallace] <- sequence $ [allocateParty] <*> ["master", "wallace", "goblin"]
 
-  wallace <- allocateParty "wallace"
-  -- goblin <- allocateParty "goblin"
+  let wallaceSheet = Sheet "Baracus Rex" 100 sword wallace master
+  let goblinSheet = Sheet "Goblin" 20 dagger goblin master
 
-  w1 <- sword
+  id <- submit master $ createCmd wallaceSheet
+  id1 <- submit master $ createCmd goblinSheet
 
-  submit master
-      $ createCmd
-      $ Sheet
-        "Baracus Rex" 100 w1
-        wallace master
+  submit goblin $ exerciseCmd id1 $ Attack id1
+
+
+
+
 

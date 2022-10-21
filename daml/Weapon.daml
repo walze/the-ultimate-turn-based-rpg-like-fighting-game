@@ -1,0 +1,10 @@
+
+module Weapon where
+
+data Weapon = Weapon
+  { name : Text
+  , ad : Int
+  } deriving (Eq, Show)
+
+sword = Weapon "Sword" 10
+dagger = Weapon "dagger" 5
