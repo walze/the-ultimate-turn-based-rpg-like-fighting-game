@@ -7,3 +7,15 @@ services:
     ports:
       - 80:80
     restart: always
+
+  server:
+    build:
+      context: .
+      dockerfile: server.Dockerfile
+    environment:
+      - DOCKER=TRUE
+    ports:
+      - 3000:3000
+    volumes:
+      - ./:/app
+    working_dir: /app
