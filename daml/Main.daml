@@ -16,7 +16,12 @@ template ActionProposal with
       master = sheet.master
       proposer = sheet.owner
 
-    choice Attack_Accept : ContractId Sheet
+    nonconsuming choice Create_Accept : ContractId Sheet
+      controller master
+      do
+        create sheet
+
+    nonconsuming choice Attack_Accept : SheetID
       with target : SheetID
       controller master
       do
@@ -29,12 +34,19 @@ setup = script do
   let wallaceSheet = Sheet "Baracus Rex" 100 sword wallace master
   let goblinSheet = Sheet "Generic Goblin" 20 dagger goblin master
 
-  idw <- submit master $ createCmd wallaceSheet
-  idg <- submit master $ createCmd goblinSheet
-  id <- submit wallace $ createCmd $ ActionProposal wallaceSheet
+  pidw <- submit wallace $ createCmd $ ActionProposal wallaceSheet
+  pidg <- submit goblin $ createCmd $ ActionProposal goblinSheet
+
+  idw <- submit master
+    $ exerciseCmd pidw
+    $ Create_Accept
+
+  idg <- submit master
+    $ exerciseCmd pidg
+    $ Create_Accept
 
   submit master
-    $ exerciseCmd id
+    $ exerciseCmd pidw
     $ Attack_Accept idg
 
   return ()
