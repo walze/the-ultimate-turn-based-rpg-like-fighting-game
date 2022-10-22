@@ -7,20 +7,21 @@ import Sheet
 
 
 template ActionProposal with
-    key : Key
+    sheet : Sheet
   where
     signatory proposer
     observer master, proposer
 
     let
-      (master, (name, proposer)) = key
+      master = sheet.master
+      proposer = sheet.owner
 
     choice Attack_Accept : ContractId Sheet
-      with target : (Text, Party)
+      with target : SheetID
       controller master
       do
-        sheet <- fetchByKey @Sheet (master, target)
-        exerciseByKey @Sheet (master, target) (Suffer 10)
+        let suffer = Suffer sheet.weapon.ad
+        exercise target suffer
 
 setup = script do
   [master, wallace, goblin] <- sequence $ party <$> ["master", "wallace", "goblin"]
@@ -30,11 +31,11 @@ setup = script do
 
   idw <- submit master $ createCmd wallaceSheet
   idg <- submit master $ createCmd goblinSheet
-  id <- submit wallace $ createCmd $ ActionProposal (master, (wallaceSheet.name, wallace))
+  id <- submit wallace $ createCmd $ ActionProposal wallaceSheet
 
   submit master
     $ exerciseCmd id
-    $ Attack_Accept (goblinSheet.name, goblin)
+    $ Attack_Accept idg
 
   return ()
 
