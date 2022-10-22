@@ -1,18 +1,28 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@daml.js/daml-project': file:daml.js/daml-project-1.0.0
+  '@daml/hub-react': latest
+  '@daml/ledger': next
+  '@daml/react': next
+  '@daml/types': next
   '@types/assert': ^1.5.6
   '@types/react': ^18.0.21
   '@types/react-dom': ^18.0.6
   '@vitejs/plugin-react': ^2.1.0
   assert: ^2.0.0
-  daml.js: file:./daml.js
+  daml.js: file:daml.js
   react: ^18.2.0
   react-dom: ^18.2.0
   typescript: ^4.8.4
   vite: ^3.1.8
 
 dependencies:
+  '@daml.js/daml-project': file:daml.js/daml-project-1.0.0
+  '@daml/hub-react': 1.1.1_biqbaboplfbrettd7655fr4n2y
+  '@daml/ledger': 2.5.0-snapshot.20221021.10816.0.7aaec19f
+  '@daml/react': 2.5.0-snapshot.20221021.10816.0.7aaec19f_react@18.2.0
+  '@daml/types': 2.5.0-snapshot.20221021.10816.0.7aaec19f
   assert: 2.0.0
   daml.js: file:daml.js
   react: 18.2.0
@@ -295,6 +305,53 @@ packages:
       to-fast-properties: 2.0.0
     dev: true
 
+  /@daml/hub-react/1.1.1_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-HEo2NA5ETIvrSujRm8+le/NA8MgE3VYRLR6VmGQczk1TEvLEZSthc1bl9EAapF9xp7TRygljf3qQ95hXvHofCQ==}
+    peerDependencies:
+      react: ^16.12.0 || ^17.0.0
+      react-dom: ^16.12.0 || ^17.0.0
+    dependencies:
+      '@mojotech/json-type-validation': 3.1.0
+      jwt-decode: 3.1.2
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
+
+  /@daml/ledger/2.5.0-snapshot.20221021.10816.0.7aaec19f:
+    resolution: {integrity: sha512-q0kTZeEfPZdXsKlALIhYJstc7/nWBfiAGhwT6dvSByaGj/sI+nxQ9FBMAi5ApPrH/dtgTm+P4G1sv1/6WQaijA==}
+    dependencies:
+      '@daml/types': 2.5.0-snapshot.20221021.10816.0.7aaec19f
+      '@mojotech/json-type-validation': 3.1.0
+      cross-fetch: 3.1.5
+      events: 3.3.0
+      isomorphic-ws: 4.0.1_ws@7.5.9
+      ws: 7.5.9
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - utf-8-validate
+    dev: false
+
+  /@daml/react/2.5.0-snapshot.20221021.10816.0.7aaec19f_react@18.2.0:
+    resolution: {integrity: sha512-maFIWnPYibB8RIpKEL9DSclay2SB4YCKzR2oGQECNf0OC/05iIaV+KE9UYCGEq01sPkT0J7JDb6lmBa74ZBinQ==}
+    peerDependencies:
+      react: ^16.12.0 || ^17.0.0
+    dependencies:
+      '@daml/ledger': 2.5.0-snapshot.20221021.10816.0.7aaec19f
+      '@daml/types': 2.5.0-snapshot.20221021.10816.0.7aaec19f
+      react: 18.2.0
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - utf-8-validate
+    dev: false
+
+  /@daml/types/2.5.0-snapshot.20221021.10816.0.7aaec19f:
+    resolution: {integrity: sha512-P5HpLQ5FJGLdyIkPTDs3Jm/VF+VRXVnmLYBd3W7QtrVD3mCfR9wIUwCdNfYUTMY+bQfL4Pp0pn6aWNyjlejMsQ==}
+    dependencies:
+      '@mojotech/json-type-validation': 3.1.0
+    dev: false
+
   /@esbuild/android-arm/0.15.12:
     resolution: {integrity: sha512-IC7TqIqiyE0MmvAhWkl/8AEzpOtbhRNDo7aph47We1NbE5w2bt/Q+giAhe0YYeVpYnIhGMcuZY92qDK6dQauvA==}
     engines: {node: '>=12'}
@@ -350,6 +407,13 @@ packages:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
+
+  /@mojotech/json-type-validation/3.1.0:
+    resolution: {integrity: sha512-ThH2EbHEUCPMHhXAtmYcDi0gmV+PZak4uvuWBMiBDqUuz7gGQUrsE5o1J6kKNLDX5cXAPqsfJ7uTfTcNdCDXxA==}
+    engines: {node: '>=6.0.0'}
+    dependencies:
+      lodash.isequal: 4.5.0
+    dev: false
 
   /@types/assert/1.5.6:
     resolution: {integrity: sha512-Y7gDJiIqb9qKUHfBQYOWGngUpLORtirAVPuj/CWJrU2C6ZM4/y3XLwuwfGMF8s7QzW746LQZx23m0+1FSgjfug==}
@@ -460,6 +524,14 @@ packages:
   /convert-source-map/1.9.0:
     resolution: {integrity: sha512-ASFBup0Mz1uyiIjANan1jzLQami9z1PoYSZCiiYW2FczPbenXc45FZdBZLzOT+r6+iciuEModtmCti+hjaAk0A==}
     dev: true
+
+  /cross-fetch/3.1.5:
+    resolution: {integrity: sha512-lvb1SBsI0Z7GDwmuid+mU3kWVBwTVUbe7S0H52yaaAdQOXq2YktTCZdlAcNKFzE6QtRz0snpw9bNiPeOIkkQvw==}
+    dependencies:
+      node-fetch: 2.6.7
+    transitivePeerDependencies:
+      - encoding
+    dev: false
 
   /csstype/3.1.1:
     resolution: {integrity: sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==}
@@ -752,6 +824,11 @@ packages:
     engines: {node: '>=0.8.0'}
     dev: true
 
+  /events/3.3.0:
+    resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
+    engines: {node: '>=0.8.x'}
+    dev: false
+
   /for-each/0.3.3:
     resolution: {integrity: sha512-jqYfLp7mo9vIyQf8ykW2v7A+2N4QjeCeI5+Dz9XraiO1ign81wjiH7Fb9vSOWvQfNtmSa4H2RoQTrrXivdUZmw==}
     dependencies:
@@ -967,6 +1044,14 @@ packages:
       call-bind: 1.0.2
     dev: false
 
+  /isomorphic-ws/4.0.1_ws@7.5.9:
+    resolution: {integrity: sha512-BhBvN2MBpWTaSHdWRb/bwdZJ1WaehQ2L1KngkCkfLUGF0mAWAT1sQUQacEmQ0jXkFw/czDXPNQSL5u2/Krsz1w==}
+    peerDependencies:
+      ws: '*'
+    dependencies:
+      ws: 7.5.9
+    dev: false
+
   /js-tokens/4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
@@ -981,6 +1066,14 @@ packages:
     engines: {node: '>=6'}
     hasBin: true
     dev: true
+
+  /jwt-decode/3.1.2:
+    resolution: {integrity: sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==}
+    dev: false
+
+  /lodash.isequal/4.5.0:
+    resolution: {integrity: sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==}
+    dev: false
 
   /loose-envify/1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
@@ -1005,6 +1098,18 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
     dev: true
+
+  /node-fetch/2.6.7:
+    resolution: {integrity: sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==}
+    engines: {node: 4.x || >=6.0.0}
+    peerDependencies:
+      encoding: ^0.1.0
+    peerDependenciesMeta:
+      encoding:
+        optional: true
+    dependencies:
+      whatwg-url: 5.0.0
+    dev: false
 
   /node-releases/2.0.6:
     resolution: {integrity: sha512-PiVXnNuFm5+iYkLBNeq5211hvO38y63T0i2KKh2KnUs3RpzJ+JtODFjkD8yjLwnDkTYF1eKXheUwdssR+NRZdg==}
@@ -1171,6 +1276,10 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
+  /tr46/0.0.3:
+    resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
+    dev: false
+
   /typescript/4.8.4:
     resolution: {integrity: sha512-QCh+85mCy+h0IGff8r5XWzOVSbBO+KfeYrMQh7NJ58QujwcE22u+NUSmUxqF+un70P9GXKxa2HCNiTTMJknyjQ==}
     engines: {node: '>=4.2.0'}
@@ -1234,6 +1343,17 @@ packages:
       fsevents: 2.3.2
     dev: true
 
+  /webidl-conversions/3.0.1:
+    resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
+    dev: false
+
+  /whatwg-url/5.0.0:
+    resolution: {integrity: sha512-saE57nupxk6v3HY35+jzBwYa0rKSy0XR8JSxZPwgLr7ys0IBzhGviA1/TUGJLmSVqs8pb9AnvICXEuOHLprYTw==}
+    dependencies:
+      tr46: 0.0.3
+      webidl-conversions: 3.0.1
+    dev: false
+
   /which-boxed-primitive/1.0.2:
     resolution: {integrity: sha512-bwZdv0AKLpplFY2KZRX6TvyuN7ojjr7lwkg6ml0roIy9YeuSr7JS372qlNW18UQYzgYK9ziGcerWqZOmEn9VNg==}
     dependencies:
@@ -1256,8 +1376,47 @@ packages:
       is-typed-array: 1.1.9
     dev: false
 
+  /ws/7.5.9:
+    resolution: {integrity: sha512-F+P9Jil7UiSKSkppIiD94dN07AwvFixvLIj1Og1Rl9GGMuNipJnV9JzjD6XuqmAeiswGvUmNLjr5cFuXwNS77Q==}
+    engines: {node: '>=8.3.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: ^5.0.2
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+    dev: false
+
   file:daml.js:
     resolution: {directory: daml.js, type: directory}
     name: daml.js
     version: 0.0.0
+    dev: false
+
+  file:daml.js/40f452260bef3f29dede136108fc08a88d5a5250310281067087da6f0baddff7:
+    resolution: {directory: daml.js/40f452260bef3f29dede136108fc08a88d5a5250310281067087da6f0baddff7, type: directory}
+    name: '@daml.js/40f452260bef3f29dede136108fc08a88d5a5250310281067087da6f0baddff7'
+    version: 2.4.0
+    dependencies:
+      '@mojotech/json-type-validation': 3.1.0
+    dev: false
+
+  file:daml.js/d14e08374fc7197d6a0de468c968ae8ba3aadbf9315476fd39071831f5923662:
+    resolution: {directory: daml.js/d14e08374fc7197d6a0de468c968ae8ba3aadbf9315476fd39071831f5923662, type: directory}
+    name: '@daml.js/d14e08374fc7197d6a0de468c968ae8ba3aadbf9315476fd39071831f5923662'
+    version: 2.4.0
+    dependencies:
+      '@mojotech/json-type-validation': 3.1.0
+    dev: false
+
+  file:daml.js/daml-project-1.0.0:
+    resolution: {directory: daml.js/daml-project-1.0.0, type: directory}
+    name: '@daml.js/daml-project-1.0.0'
+    version: 2.4.0
+    dependencies:
+      '@daml.js/40f452260bef3f29dede136108fc08a88d5a5250310281067087da6f0baddff7': file:daml.js/40f452260bef3f29dede136108fc08a88d5a5250310281067087da6f0baddff7
+      '@daml.js/d14e08374fc7197d6a0de468c968ae8ba3aadbf9315476fd39071831f5923662': file:daml.js/d14e08374fc7197d6a0de468c968ae8ba3aadbf9315476fd39071831f5923662
+      '@mojotech/json-type-validation': 3.1.0
     dev: false

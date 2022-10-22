@@ -11,8 +11,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@daml.js/daml-project": "file:daml.js/daml-project-1.0.0",
+    "@daml/hub-react": "latest",
+    "@daml/ledger": "next",
+    "@daml/react": "next",
+    "@daml/types": "next",
     "assert": "^2.0.0",
-    "daml.js": "file:./daml.js",
+    "daml.js": "file:daml.js",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
