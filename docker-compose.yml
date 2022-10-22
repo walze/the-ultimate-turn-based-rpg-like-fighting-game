@@ -1,12 +1,9 @@
 
 services:
-  daml:
-    image: digitalasset/daml-sdk:2.4.0
-    ports:
-      - 5011:5011
-      - 6865:6865
-      - 7575:7575
+  proxy:
+    image: nginx:latest
     volumes:
-      - .:/app
-    command: ["daml", "start"]
-    working_dir: /app
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - 80:80
+    restart: always

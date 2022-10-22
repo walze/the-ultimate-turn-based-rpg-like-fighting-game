@@ -9,7 +9,7 @@ config();
 export default defineConfig({
   plugins: [react()],
   build: {
-    polyfillModulePreload: true,
+    polyfillModulePreload: false,
     target: 'esnext',
   },
   optimizeDeps: {
