@@ -10,3 +10,7 @@ dependencies:
   - daml-prim
   - daml-stdlib
   - daml-script
+codegen:
+  js:
+    output-directory: ui/daml.js
+    npm-scope: daml.js
