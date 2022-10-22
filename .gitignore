@@ -4,3 +4,4 @@ navigator.log
 daml.js
 
 node_modules
+.DS_Store
