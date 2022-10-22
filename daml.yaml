@@ -5,6 +5,7 @@ sdk-version: 2.4.0
 name: daml-project
 source: daml
 init-script: Script:setup
+start-navigator: false
 version: 1.0.0
 dependencies:
   - daml-prim

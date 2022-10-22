@@ -1,0 +1,12 @@
+
+services:
+  daml:
+    image: digitalasset/daml-sdk:2.4.0
+    ports:
+      - 5011:5011
+      - 6865:6865
+      - 7575:7575
+    volumes:
+      - .:/app
+    command: ["daml", "start"]
+    working_dir: /app
