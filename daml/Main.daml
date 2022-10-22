@@ -6,17 +6,42 @@ import Weapon
 import Sheet
 
 
-setup : Script SheetID
+template ActionProposal with
+    key : Key
+  where
+    signatory proposer
+    observer master, proposer
+
+    let
+      (master, (name, proposer)) = key
+
+    choice Attack_Accept : ContractId Sheet
+      with target : (Text, Party)
+      controller master
+      do
+        sheet <- fetchByKey @Sheet (master, target)
+        exerciseByKey @Sheet (master, target) (Suffer 10)
+
 setup = script do
-  [master, goblin, wallace] <- sequence $ [allocateParty] <*> ["master", "wallace", "goblin"]
+  [master, wallace, goblin] <- sequence $ party <$> ["master", "wallace", "goblin"]
 
   let wallaceSheet = Sheet "Baracus Rex" 100 sword wallace master
-  let goblinSheet = Sheet "Goblin" 20 dagger goblin master
+  let goblinSheet = Sheet "Generic Goblin" 20 dagger goblin master
 
-  id <- submit master $ createCmd wallaceSheet
-  id1 <- submit master $ createCmd goblinSheet
+  idw <- submit master $ createCmd wallaceSheet
+  idg <- submit master $ createCmd goblinSheet
+  id <- submit wallace $ createCmd $ ActionProposal (master, (wallaceSheet.name, wallace))
 
-  submit goblin $ exerciseCmd id1 $ Attack id1
+  submit master
+    $ exerciseCmd id
+    $ Attack_Accept (goblinSheet.name, goblin)
+
+  return ()
+
+  where
+    party : Text -> Script Party
+    party t = allocatePartyWithHintOn t (PartyIdHint t) (ParticipantName t)
+
 
 
 

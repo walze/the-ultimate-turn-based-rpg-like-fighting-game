@@ -2,24 +2,31 @@ module Sheet where
 
 import Weapon
 
+type Target = (Text, Party)
+type Key = (Party, Target)
 type SheetID = ContractId Sheet
+
 template Sheet with
     name: Text
     hp: Int
     weapon: Weapon
-    player: Party
+    owner: Party
     master: Party
   where
     ensure name /= ""
     signatory master
-    observer player, master
+    observer owner, master
+    key (master, (name, owner)) : Key
+    maintainer fst key
 
-    postconsuming choice Attack : SheetID
+    let
+      isAlive = hp > 0
+
+    choice Suffer : SheetID
         with
-          target : SheetID
-        controller player
+            damage: Int
+        controller master
         do
-          targetSheet <- fetch target
-          create this with hp = hp - targetSheet.weapon.ad
-
+            create this with
+                hp = hp - damage
 
