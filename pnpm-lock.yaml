@@ -13,6 +13,7 @@ specifiers:
   '@types/cors': ^2.8.12
   '@types/express': ^4.17.14
   '@types/jsonwebtoken': ^8.5.9
+  '@types/lodash': ^4.14.186
   '@types/node': ^18.11.3
   '@types/react': ^18.0.21
   '@types/react-dom': ^18.0.6
@@ -45,6 +46,7 @@ dependencies:
   '@daml/react': 2.5.0-snapshot.20221021.10816.0.7aaec19f_react@18.2.0
   '@daml/types': 2.5.0-snapshot.20221021.10816.0.7aaec19f
   '@esbuild-plugins/node-globals-polyfill': 0.1.1_esbuild@0.15.12
+  '@types/lodash': 4.14.186
   assert: 2.0.0
   body-parser: 1.20.1
   cors: 2.8.5
@@ -538,6 +540,10 @@ packages:
     dependencies:
       '@types/node': 18.11.3
     dev: true
+
+  /@types/lodash/4.14.186:
+    resolution: {integrity: sha512-eHcVlLXP0c2FlMPm56ITode2AgLMSa6aJ05JTTbYbI+7EMkCEE5qk2E41d5g2lCVTqRe0GnnRFurmlCsDODrPw==}
+    dev: false
 
   /@types/mime/3.0.1:
     resolution: {integrity: sha512-Y4XFY5VJAuw0FgAqPNd6NNoV44jbq9Bz2L7Rh/J6jLTiHBSBJa9fxqQIvkIld4GsoDOcCbvzOUAbLPsSKKg+uA==}

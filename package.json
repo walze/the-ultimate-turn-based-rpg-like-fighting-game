@@ -19,6 +19,7 @@
     "@daml/react": "next",
     "@daml/types": "next",
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
+    "@types/lodash": "^4.14.186",
     "assert": "^2.0.0",
     "body-parser": "^1.20.1",
     "cors": "^2.8.5",

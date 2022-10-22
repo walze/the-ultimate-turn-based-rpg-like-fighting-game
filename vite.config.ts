@@ -6,7 +6,12 @@ config();
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react({
+      jsxRuntime: 'automatic',
+      jsxImportSource: '@welldone-software/why-did-you-render',
+    }),
+  ],
   build: {
     polyfillModulePreload: false,
     target: 'esnext',
