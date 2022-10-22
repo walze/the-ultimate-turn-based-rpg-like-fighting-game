@@ -4,8 +4,8 @@
 sdk-version: 2.4.0
 name: skeleton
 source: daml
-init-script: Main:setup
-version: 0.0.1
+init-script: Script:setup
+version: 1.0.0
 dependencies:
   - daml-prim
   - daml-stdlib
