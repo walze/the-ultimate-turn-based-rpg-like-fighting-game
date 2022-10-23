@@ -3,6 +3,12 @@ import { fromFetch } from 'rxjs/fetch';
 
 const domain = process.env['DOMAIN'] ?? 'localhost';
 
+export enum Party {
+  WALLACE = 'master',
+  MASTER = 'master',
+  GOBLIN = 'goblin',
+}
+
 export const getToken = (party: string) => {
   const data = {
     'https://daml.com/ledger-api': {

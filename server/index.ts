@@ -24,7 +24,11 @@ app.listen(3000, () => {
   );
 });
 
-app.post('/token', async (req, res) => {
+app.post('/token', (req, res) => {
+  console.log('------------------------');
+  console.log(req.body);
+  console.log('------------------------');
+
   res.send(sign(req.body, SECRET));
 });
 

@@ -21,6 +21,7 @@
     "@daml/react": "latest",
     "@daml/types": "latest",
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
+    "@rollup/plugin-alias": "^4.0.2",
     "@types/lodash": "^4.14.186",
     "assert": "^2.0.0",
     "body-parser": "^1.20.1",
