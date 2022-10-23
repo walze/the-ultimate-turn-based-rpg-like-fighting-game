@@ -9,13 +9,31 @@ services:
     restart: always
 
   server:
+    image: daml-project/server:1.0.0
     build:
       context: .
-      dockerfile: server.Dockerfile
+      target: server
+      dockerfile: Dockerfile
     environment:
       - DOCKER=TRUE
     ports:
       - 3000:3000
     volumes:
       - ./:/app
+      - /app/node_modules
+    working_dir: /app
+
+  client:
+    image: daml-project/client:1.0.0
+    build:
+      context: .
+      target: client
+      dockerfile: Dockerfile
+    ports:
+      - 5173:5173
+    environment:
+      - DOCKER=TRUE
+    volumes:
+      - ./:/app
+      - /app/node_modules
     working_dir: /app

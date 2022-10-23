@@ -9,7 +9,6 @@ export default defineConfig({
   plugins: [
     react({
       jsxRuntime: 'automatic',
-      jsxImportSource: '@welldone-software/why-did-you-render',
     }),
   ],
   build: {

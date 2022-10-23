@@ -1,6 +1,8 @@
 import { mergeMap } from 'rxjs';
 import { fromFetch } from 'rxjs/fetch';
 
+const domain = process.env['DOMAIN'] ?? 'localhost';
+
 export const getToken = (party: string) => {
   const data = {
     'https://daml.com/ledger-api': {
@@ -10,7 +12,7 @@ export const getToken = (party: string) => {
     },
   };
 
-  return fromFetch('http://localhost:3000/token', {
+  return fromFetch(`http://${domain}:3000/token`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

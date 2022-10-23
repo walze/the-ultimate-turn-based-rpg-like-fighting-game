@@ -42,7 +42,7 @@ app.all('*', (req, res) => {
 
   const body =
     req.method !== 'GET' && req.method !== 'HEAD'
-      ? req.body
+      ? JSON.stringify(req.body)
       : undefined;
 
   fetch(url, {
@@ -54,13 +54,21 @@ app.all('*', (req, res) => {
     body,
     compress: true,
   })
-    .then((r) => r.json())
+    .then((r) => r.text())
     .catch((e) => {
       console.log(req.body, e);
       res.status(500);
       return e;
     })
     .then((r) => {
-      res.send(r);
+      console.log(r);
+
+      try {
+        res.setHeader('Content-Type', 'application/json');
+        res.json(JSON.parse(r));
+      } catch (error) {
+        res.setHeader('Content-Type', 'text/plain');
+        res.send(r);
+      }
     });
 });
