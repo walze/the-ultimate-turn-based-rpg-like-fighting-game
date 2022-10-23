@@ -6,7 +6,7 @@
   "scripts": {
     "build:client": "vite build",
     "build:daml": "daml build",
-    "dev:serve": "ts-node-esm -P server/tsconfig.node.json ./server/server.ts",
+    "dev:serve": "ts-node-esm -P server/tsconfig.node.json ./server/index.ts",
     "codegen": "daml build && daml codegen js",
     "preview": "vite preview",
     "dup": "pnpm codegen && docker compose up",

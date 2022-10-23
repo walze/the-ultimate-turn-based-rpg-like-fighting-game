@@ -61,7 +61,9 @@ app.all('*', (req, res) => {
       return e;
     })
     .then((r) => {
+      console.log('-----------------');
       console.log(r);
+      console.log('-----------------');
 
       try {
         res.setHeader('Content-Type', 'application/json');
