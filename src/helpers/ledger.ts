@@ -2,8 +2,8 @@ import Ledger from '@daml/ledger';
 import { map } from 'rxjs';
 import { getToken } from '../config';
 
-export const getLedger = (to: string) =>
-  getToken(to).pipe(
+export const getLedger = (party: string) =>
+  getToken(party).pipe(
     map(
       (token) =>
         new Ledger({

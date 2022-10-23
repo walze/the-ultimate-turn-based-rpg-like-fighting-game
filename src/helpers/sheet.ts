@@ -6,7 +6,7 @@ import { getParty } from './party';
 export const createSheet = (
   masterID: string,
   partyName: string,
-  sheet: Sheet.Sheet,
+  sheet: Partial<Sheet.Sheet>,
 ) =>
   mergeMap((l: Ledger) =>
     of(l).pipe(
@@ -17,6 +17,8 @@ export const createSheet = (
         owner: party.identifier,
       })),
       tap((sheet) => console.log('sheet', sheet)),
-      mergeMap((sheet) => l.create(Sheet.Sheet, sheet)),
+      mergeMap((sheet) =>
+        l.create(Sheet.Sheet, sheet as Sheet.Sheet),
+      ),
     ),
   );
