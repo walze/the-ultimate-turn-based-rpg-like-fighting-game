@@ -1,6 +1,7 @@
 import { Sheet, Weapon } from '@daml.js/daml-project';
 import { FC } from 'react';
 import { Party } from './config';
+import Input from './form/Input';
 import getMaster from './helpers/getMaster';
 import { getLedger } from './helpers/ledger';
 import { createSheet } from './helpers/sheet';
@@ -15,15 +16,13 @@ const App: FC = () => {
   if (!m) return <div>Loading...</div>;
 
   return (
-    <main
-      style={{
-        maxWidth: '512ppx',
-        display: 'flex',
-        flexDirection: 'column',
-        margin: '1rem auto',
-      }}
-    >
-      <pre>{JSON.stringify(m, null, 2)}</pre>
+    <main className="p-4 container flex flex-col gap-4">
+      <h1 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
+        Turn-Based Fighting Game
+      </h1>
+
+      <Input label="Name" placeholder="Character name" />
+      <Input label="HP" placeholder="Health Points" />
 
       <button
         onClick={() => {
