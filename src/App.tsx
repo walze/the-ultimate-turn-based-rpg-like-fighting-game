@@ -6,7 +6,9 @@ import Input from './form/Input';
 import getMaster from './helpers/getMaster';
 import { getLedger } from './helpers/ledger';
 import { createSheet } from './helpers/sheet';
-import use$ from './helpers/use$';
+import use$, { useNullable$ } from './helpers/use$';
+import { mergeMap, of } from 'rxjs';
+import { getParty } from './helpers/party';
 
 export const Sword: Weapon.Weapon = {
   name: 'Sword',
@@ -17,9 +19,6 @@ export const Dagger: Weapon.Weapon = {
   name: 'Dagger',
   ad: '5',
 };
-
-const ledger = getLedger(Party.MASTER);
-const master = getMaster(ledger);
 
 const BASE_HEALTH = 8;
 const WEAPONS = [Sword, Dagger];
@@ -34,21 +33,53 @@ const submit = (party: string) => (f: HTMLFormElement) => {
   const weapon = WEAPONS.find((w) => w.name === inputs['weapon']);
   if (!weapon) return;
 
+  // @ts-ignore
   const sheet: Partial<Sheet.Sheet> = {
     name: inputs['name'],
     weapon: weapon,
     hp: BASE_HEALTH * +weapon.ad + '',
   };
 
-  getLedger(party)
+  getLedger(of(party))
     .pipe(createSheet(party, Party.WALLACE, sheet))
     .subscribe(console.warn);
 };
 
+const ledger = getLedger(of(Party.MASTER));
+const master = getMaster(ledger);
+const wallace = getParty(Party.WALLACE);
+
+const key = (master: string, name: string, identifier: string) => ({
+  _1: master,
+  _2: {
+    _1: name,
+    _2: identifier,
+  },
+});
+
 const App: FC = () => {
   const m = use$(master);
+  const l = useNullable$(m?.identifier, getLedger);
+  const w = useNullable$(l, wallace);
 
-  if (!m) return <div>Loading...</div>;
+  console.log({ m, l, w });
+  if (!m || !l || !w) return <h1>Loading...</h1>;
+
+  // of(m.identifier)
+  //   .pipe(
+  //     getLedger,
+  //     mergeMap((l) =>
+  //       of(l).pipe(
+  //         mergeMap(() =>
+  //           l.fetchByKey(
+  //             Sheet.Sheet,
+  //             key(m.identifier, 'Maximus Minimus', w.identifier),
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   )
+  //   .subscribe(console.log);
 
   return (
     <main className="p-4 container flex flex-col gap-4">

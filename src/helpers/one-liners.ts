@@ -8,5 +8,5 @@ export const assert$ = <T>(m?: string | Error) =>
   map((p: T) => {
     assert(p, m);
 
-    return p;
+    return p as NonNullable<T>;
   });
