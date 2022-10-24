@@ -4,6 +4,7 @@ import { getLedger } from './helpers/ledger';
 import use$, { useNullable$ } from './helpers/use$';
 import Login from './pages/Login';
 import { useStore } from './helpers/store';
+import CreateSheet from './pages/CreateSheet';
 
 const App: FC = () => {
   const store = useStore();
@@ -24,7 +25,7 @@ const App: FC = () => {
 
   if (!master || !ledger) return null;
 
-  console.log(store);
+  const isLogged = !!store.owner;
 
   return (
     <main className="p-4 container flex flex-col gap-4 sm:mx-auto sm:w-full sm:max-w-md">
@@ -32,8 +33,11 @@ const App: FC = () => {
         The Ultimate Turn-Based RPG Like Fighting Game
       </h1>
 
-      <Login />
-      {/* <CreateSheet master={m.identifier} /> */}
+      {!isLogged ? (
+        <Login />
+      ) : (
+        <CreateSheet master={master.identifier} />
+      )}
     </main>
   );
 };
