@@ -11,7 +11,7 @@
     "preview": "vite preview",
     "dup": "pnpm codegen && docker compose up",
     "start": "docker compose down && docker compose up -d && docker compose logs -f",
-    "start:client": "vite --host",
+    "start:client": "vite",
     "watch:serve": "nodemon server/server.ts --exec 'pnpm dev:serve'"
   },
   "dependencies": {

@@ -1,5 +1,5 @@
 import { FC, useEffect } from 'react';
-import { master$ } from './config';
+import { ledger, master$ } from './config';
 import { getLedger } from './helpers/ledger';
 import use$, { useNullable$ } from './helpers/use$';
 import Login from './pages/Login';
@@ -19,6 +19,7 @@ const App: FC = () => {
   const { set, owner } = store;
 
   const master = use$(master$);
+
   const ledger = useNullable$(
     master?.identifier,
     getLedger,

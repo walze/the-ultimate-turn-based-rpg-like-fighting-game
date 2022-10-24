@@ -1,13 +1,5 @@
 
 services:
-  proxy:
-    image: nginx:latest
-    volumes:
-      - ./default.conf:/etc/nginx/conf.d/default.conf
-    ports:
-      - 80:80
-    restart: always
-
   server:
     image: daml-project/server:1.0.0
     build:
@@ -37,3 +29,5 @@ services:
       - ./:/app
       - /app/node_modules
     working_dir: /app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

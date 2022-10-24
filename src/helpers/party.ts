@@ -4,8 +4,18 @@ import Ledger, {
   UserRightHelper,
 } from '@daml/ledger';
 import assert from 'assert';
-import { mergeMap, of, catchError, from, map, tap } from 'rxjs';
-import { array, assert$ } from './one-liners';
+import {
+  mergeMap,
+  of,
+  catchError,
+  from,
+  map,
+  tap,
+  mergeAll,
+  find,
+  pipe,
+} from 'rxjs';
+import { assert$ } from './one-liners';
 
 const r = /^[a-z0-9@^$.!`\-#+'~_|:]{1,128}$/;
 
@@ -24,23 +34,32 @@ export const setRights = (l: Ledger, rights: UserRight[] = []) =>
 
     // l.grantUserRights(party, rights).then(console.log);
     l.createUser(party, rs, party).catch(() => {
-      l.grantUserRights(party, rs).then(console.log);
+      l.grantUserRights(party, rs).then(console.warn);
     });
 
     return m;
   });
 
 export const getParty = (name: string) =>
-  mergeMap((l: Ledger) =>
-    of(l).pipe(
-      tap(() => assert(r.test(name), `Invalid party name ${name}`)),
-      mergeMap(() =>
-        l.allocateParty({ displayName: name, identifierHint: name }),
+  pipe(
+    tap((_: Ledger) =>
+      assert(r.test(name), `Invalid party name ${name}`),
+    ),
+    mergeMap((l) =>
+      of(l).pipe(
+        mergeMap(() => l.listKnownParties()),
+        mergeAll(),
+        find((p) => p.identifier.includes(name)),
+        assert$('Party not found'),
+        catchError(() =>
+          from(
+            l.allocateParty({
+              displayName: name,
+              identifierHint: name,
+            }),
+          ),
+        ),
+        setRights(l),
       ),
-      catchError(() => from(l.listKnownParties())),
-      map(array),
-      map((p) => p.find((p) => p.displayName === name)),
-      assert$('Party not found'),
-      setRights(l),
     ),
   );
