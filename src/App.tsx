@@ -1,16 +1,17 @@
 import { FC, useEffect } from 'react';
-import { ledger, master$ } from './config';
+import { master$ } from './config';
 import { getLedger } from './helpers/ledger';
 import use$, { useNullable$ } from './helpers/use$';
-import Login from './pages/Login';
+import Login from './component/Login';
 import { useStore } from './helpers/store';
-import CreateSheet from './pages/CreateSheet';
-import Modal from './components/Modal';
-import SheetPage from './pages/Sheet';
+import CreateSheet from './component/CreateSheet';
+import Modal from './component/Modal';
+import SheetPage from './component/Sheet';
 import { Sheet } from '@daml.js/daml-project';
 import assert from './helpers/assert';
 import { key } from './helpers/sheet';
 import type Ledger from '@daml/ledger';
+import Button from './form/Button';
 
 const App: FC = () => {
   const store = useStore();
@@ -53,7 +54,7 @@ const App: FC = () => {
 
   return (
     <section className="p-4 container flex flex-col gap-4 sm:mx-auto sm:w-full sm:max-w-md">
-      <h1 className="uppercase font-extrabold mt-6 text-center text-3xl text-gray-900">
+      <h1 className="tracking-tight uppercase font-extrabold mt-6 text-center text-3xl text-gray-900">
         The Ultimate Turn-Based RPG Like Fighting Game
       </h1>
 
@@ -61,7 +62,15 @@ const App: FC = () => {
         <Login />
       </Modal>
 
-      {hasSheet ? <SheetPage /> : <CreateSheet />}
+      {isLogged && hasSheet && (
+        <>
+          <Button>Find new foe</Button>
+
+          <SheetPage />
+        </>
+      )}
+
+      {isLogged && !hasSheet && <CreateSheet />}
     </section>
   );
 };
