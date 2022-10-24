@@ -27,7 +27,7 @@ export const BASE_HEALTH = 8;
 export const WEAPONS = [Sword, Dagger];
 
 export const ledger = getLedger(of(Party.MASTER));
-export const master = getMaster(ledger);
+export const master$ = getMaster(ledger);
 
 export const getToken = (party: string) => {
   const data = {
