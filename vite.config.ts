@@ -17,6 +17,11 @@ export default defineConfig({
   server: {
     host: true,
     proxy: {
+      '/name': {
+        target: 'https://names.drycodes.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/name/, ''),
+      },
       '/api': {
         target: 'http://host.docker.internal:7575',
         changeOrigin: true,

@@ -32,10 +32,9 @@ export const setRights = (l: Ledger, rights: UserRight[] = []) =>
       ...rights,
     ];
 
-    // l.grantUserRights(party, rights).then(console.log);
-    l.createUser(party, rs, party).catch(() => {
-      l.grantUserRights(party, rs).then(console.warn);
-    });
+    l.getUser(party)
+      .then(() => l.grantUserRights(party, rights))
+      .catch(() => l.createUser(party, rs, party));
 
     return m;
   });
