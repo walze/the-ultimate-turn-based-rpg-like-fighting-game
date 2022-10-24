@@ -5,6 +5,7 @@ import use$, { useNullable$ } from './helpers/use$';
 import Login from './pages/Login';
 import { useStore } from './helpers/store';
 import CreateSheet from './pages/CreateSheet';
+import Modal from './components/Modal';
 
 const App: FC = () => {
   const store = useStore();
@@ -28,17 +29,17 @@ const App: FC = () => {
   const isLogged = !!store.owner;
 
   return (
-    <main className="p-4 container flex flex-col gap-4 sm:mx-auto sm:w-full sm:max-w-md">
-      <h1 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+    <section className="p-4 container flex flex-col gap-4 sm:mx-auto sm:w-full sm:max-w-md">
+      <h1 className="uppercase font-extrabold mt-6 text-center text-3xl text-gray-900">
         The Ultimate Turn-Based RPG Like Fighting Game
       </h1>
 
-      {!isLogged ? (
+      <Modal show={!isLogged}>
         <Login />
-      ) : (
-        <CreateSheet master={master.identifier} />
-      )}
-    </main>
+      </Modal>
+
+      <CreateSheet master={master.identifier} />
+    </section>
   );
 };
 

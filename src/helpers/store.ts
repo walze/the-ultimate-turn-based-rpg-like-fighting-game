@@ -1,7 +1,7 @@
 import Ledger, { PartyInfo } from '@daml/ledger';
 import create from 'zustand';
 
-interface State {
+export interface State {
   ledger?: Ledger;
   master?: PartyInfo;
   owner?: PartyInfo;
