@@ -22,3 +22,15 @@ export const createSheet = (
       ),
     ),
   );
+
+export const key = (
+  master: string,
+  name: string,
+  identifier: string,
+) => ({
+  _1: master,
+  _2: {
+    _1: name,
+    _2: identifier,
+  },
+});

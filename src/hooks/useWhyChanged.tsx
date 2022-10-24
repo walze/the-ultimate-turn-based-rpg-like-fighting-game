@@ -28,7 +28,7 @@ const useWhyChanged = (props: Object) => {
 
     console.table(changes);
     console.log(changes);
-    previousProps.current = props;
+    previousProps.current = merged;
   });
 };
 

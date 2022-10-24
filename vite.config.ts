@@ -5,7 +5,7 @@ import path from 'path';
 
 config();
 
-console.log(path.join(__dirname, './src/'));
+const target = 'chrome100';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -17,16 +17,16 @@ export default defineConfig({
   ],
   optimizeDeps: {
     esbuildOptions: {
-      target: 'chrome100',
+      target,
     },
   },
   esbuild: {
-    target: 'chrome100',
+    target,
   },
 
   build: {
     polyfillModulePreload: false,
-    target: 'chrome100',
+    target,
   },
   define: {
     process: {
