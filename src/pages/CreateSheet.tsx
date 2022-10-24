@@ -1,5 +1,6 @@
 import { FormEvent } from 'react';
 import { of } from 'rxjs';
+import { useStore } from '../helpers/store';
 import { WEAPONS, BASE_HEALTH, Party } from '../config';
 import Input from '../form/Input';
 import Select from '../form/Select';
@@ -31,21 +32,26 @@ const submit = (party: string) => (e: FormEvent<HTMLFormElement>) => {
     .subscribe(console.warn);
 };
 
-type Props = {
-  master: string;
-};
+export default () => {
+  const { master } = useStore();
 
-export default ({ master }: Props) => (
-  <form className="[&>*]:mb-4" onSubmit={submit(master)}>
-    <Input label="Name" placeholder="Character name" />
+  if (!master) return <>Loading...</>;
 
-    <Select name="weapon" list={WEAPONS.map((w) => w.name)} />
-
-    <button
-      type="submit"
-      className="w-full rounded-md border bg-indigo-600 px-6 py-3 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+  return (
+    <form
+      className="[&>*]:mb-4"
+      onSubmit={submit(master?.identifier)}
     >
-      Create Sheet
-    </button>
-  </form>
-);
+      <Input label="Name" placeholder="Character name" />
+
+      <Select name="weapon" list={WEAPONS.map((w) => w.name)} />
+
+      <button
+        type="submit"
+        className="w-full rounded-md border bg-indigo-600 px-6 py-3 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      >
+        Create Sheet
+      </button>
+    </form>
+  );
+};
