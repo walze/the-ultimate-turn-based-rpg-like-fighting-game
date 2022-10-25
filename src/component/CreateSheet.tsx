@@ -7,6 +7,7 @@ import Select from '../form/Select';
 import { getLedger } from '../helpers/ledger';
 import { createSheet } from '../helpers/sheet';
 import { rmap } from '../helpers/BiFunctor$';
+import { CharAction } from '@daml.js/daml-project';
 
 const submit =
   (masterID: string, party: string) =>

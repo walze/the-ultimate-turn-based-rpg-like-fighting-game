@@ -2,6 +2,7 @@ import { Sheet } from '@daml.js/daml-project';
 import Ledger from '@daml/ledger';
 import { mergeMap, of, map, lastValueFrom, pipe, tap } from 'rxjs';
 import { BASE_HEALTH, WEAPONS } from '../config';
+import { acceptSheetCreate } from './action';
 import { bbind, rbind, rmap } from './BiFunctor$';
 import { getName } from './name-api';
 import { getParty } from './party';
@@ -33,12 +34,16 @@ export const createSheet = (
     bbind((l: Ledger, name: string) =>
       of([l, name] as const).pipe(
         getParty(name),
-        rmap((party) => ({
-          ...sheet,
-          master: masterID,
-          owner: party.identifier,
-        })),
-        rbind((sheet) => l.create(Sheet.Sheet, sheet as Sheet.Sheet)),
+        rmap(
+          (party) =>
+            ({
+              ...sheet,
+              master: masterID,
+              owner: party.identifier,
+            } as Sheet.Sheet),
+        ),
+        log$(),
+        acceptSheetCreate,
         map((sheet) => [l, sheet]),
       ),
     ),
