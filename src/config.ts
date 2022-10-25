@@ -18,7 +18,7 @@ export const Dagger: Weapon.Weapon = {
 };
 
 export enum Party {
-  WALLACE = 'wallace',
+  OWNER = 'marcus',
   MASTER = 'master',
   GOBLIN = 'goblin',
 }

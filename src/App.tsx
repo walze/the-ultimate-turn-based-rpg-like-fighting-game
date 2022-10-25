@@ -9,7 +9,7 @@ import CreateSheet from './component/CreateSheet';
 import Modal from './component/Modal';
 import SheetPage from './component/Sheet';
 import { Sheet } from '@daml.js/daml-project';
-import assert from './helpers/assertid';
+import assertid from './helpers/assert_id';
 import {
   createSheet,
   key,
@@ -25,10 +25,7 @@ export const master$ = getMaster(ledger$);
 
 const App: FC = () => {
   const store = useStore();
-  console.log(store);
-
   const { set, owner } = store;
-
   const [ledger, master] = use$(master$) || [];
 
   useEffect(() => {
@@ -39,13 +36,15 @@ const App: FC = () => {
   useEffect(() => {
     if (!ledger || !owner || !master) return;
 
-    const name = 'Baracus Rexx';
+    const name = 'nice';
     const skey = key(master.identifier, name, owner.identifier);
+
+    console.log(skey);
 
     ledger
       .fetchByKey(Sheet.Sheet, skey)
       .then((s) => s?.payload)
-      .then(assert)
+      .then(assertid())
       .then((sheet) => set({ sheet }))
       .catch(() => console.warn('No sheet found for', name));
   }, [ledger, owner, master]);
@@ -69,17 +68,16 @@ const App: FC = () => {
         <>
           <Button
             onClick={async () => {
-              const sheet = await randomSheetTemplate();
-              const partyName = slugify(
-                sheet.name,
-              ).toLocaleLowerCase();
-
-              of([ledger, undefined] as const)
-                .pipe(
-                  getParty(partyName),
-                  // createSheet(master.identifier, partyName, sheet),
-                )
-                .subscribe(console.log);
+              // const sheet = await randomSheetTemplate();
+              // const partyName = slugify(
+              //   sheet.name,
+              // ).toLocaleLowerCase();
+              // // of([ledger, undefined] as const)
+              // //   .pipe(
+              // //     getParty(partyName),
+              // //     // createSheet(master.identifier, partyName, sheet),
+              // //   )
+              // //   .subscribe(console.log);
             }}
           >
             Find new foe

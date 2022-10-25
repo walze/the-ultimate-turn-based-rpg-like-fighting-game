@@ -38,7 +38,7 @@ export default () => {
         .subscribe(([, party]) => {
           set({ owner: party });
         });
-  }, []);
+  }, [ledger]);
 
   if (!ledger) return null;
 

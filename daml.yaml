@@ -8,6 +8,7 @@ init-script: Script:setup
 start-navigator: true
 parties:
   - master
+  - wallace
 version: 1.0.0
 dependencies:
   - daml-prim

@@ -1,6 +1,6 @@
 import { Sheet } from '@daml.js/daml-project';
 import Ledger from '@daml/ledger';
-import { mergeMap, of, map, lastValueFrom, pipe } from 'rxjs';
+import { mergeMap, of, map, lastValueFrom, pipe, tap } from 'rxjs';
 import { BASE_HEALTH, WEAPONS } from '../config';
 import { bbind, rbind, rmap } from './BiFunctor$';
 import { getName } from './name-api';

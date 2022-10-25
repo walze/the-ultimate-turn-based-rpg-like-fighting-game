@@ -8,44 +8,46 @@ import { getLedger } from '../helpers/ledger';
 import { createSheet } from '../helpers/sheet';
 import { rmap } from '../helpers/BiFunctor$';
 
-const submit = (party: string) => (e: FormEvent<HTMLFormElement>) => {
-  const { currentTarget: f } = e;
-  e.preventDefault();
+const submit =
+  (masterID: string, party: string) =>
+  (e: FormEvent<HTMLFormElement>) => {
+    const { currentTarget: f } = e;
+    e.preventDefault();
 
-  if (!f) return;
-  const ar = Array.from(f.elements) as HTMLInputElement[];
-  const inputs = Object.fromEntries(
-    ar.filter((e) => e.name).map((e) => [e.name, e.value]),
-  );
+    if (!f) return;
+    const ar = Array.from(f.elements) as HTMLInputElement[];
+    const inputs = Object.fromEntries(
+      ar.filter((e) => e.name).map((e) => [e.name, e.value]),
+    );
 
-  const weapon = WEAPONS.find((w) => w.name === inputs['weapon']);
-  if (!weapon) return;
+    const weapon = WEAPONS.find((w) => w.name === inputs['weapon']);
+    if (!weapon) return;
 
-  // @ts-ignore
-  const sheet: Partial<Sheet.Sheet> = {
-    name: inputs['name'],
-    weapon: weapon,
-    hp: BASE_HEALTH * +weapon.ad + '',
+    // @ts-ignore
+    const sheet: Partial<Sheet.Sheet> = {
+      name: inputs['name'],
+      weapon: weapon,
+      hp: BASE_HEALTH * +weapon.ad + '',
+    };
+
+    of(party)
+      .pipe(
+        getLedger,
+        rmap(() => party),
+        createSheet(masterID, sheet),
+      )
+      .subscribe(console.warn);
   };
 
-  of(party)
-    .pipe(
-      getLedger,
-      rmap(() => party),
-      createSheet(party, sheet),
-    )
-    .subscribe(console.warn);
-};
-
 export default () => {
-  const { master } = useStore();
+  const { master, owner } = useStore();
 
-  if (!master) return <>Loading...</>;
+  if (!master || !owner) return <>Loading...</>;
 
   return (
     <form
       className="[&>*]:mb-4"
-      onSubmit={submit(master?.identifier)}
+      onSubmit={submit(master?.identifier, owner?.identifier)}
     >
       <Input label="Name" placeholder="Character name" />
 
