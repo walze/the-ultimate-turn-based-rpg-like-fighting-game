@@ -12,7 +12,7 @@
     "dup": "pnpm codegen && docker compose up",
     "start": "docker compose down && docker compose up -d && docker compose logs -f",
     "start:client": "vite",
-    "watch:serve": "nodemon server/server.ts --exec 'pnpm dev:serve'"
+    "watch:serve": "nodemon server/index.ts --exec 'pnpm dev:serve'"
   },
   "dependencies": {
     "@daml.js/daml-project": "file:daml.js/daml-project-1.0.0",

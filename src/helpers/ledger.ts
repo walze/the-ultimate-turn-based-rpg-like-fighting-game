@@ -5,15 +5,15 @@ import { lbind, lmap, pair } from './BiFunctor$';
 
 const host = window.location.host;
 
+export const _ledger = (token: string = '') =>
+  new Ledger({
+    token,
+    wsBaseUrl: `ws://${host}/ws/`,
+    httpBaseUrl: `http://${host}/api/`,
+  });
+
 export const getLedger = pipe(
   map((p: string) => pair(p, p)),
-  lbind((p) => getToken(p)),
-  lmap(
-    (token) =>
-      new Ledger({
-        token,
-        wsBaseUrl: `ws://${host}/ws/`,
-        httpBaseUrl: `http://${host}/api/`,
-      }),
-  ),
+  lbind(getToken),
+  lmap(_ledger),
 );

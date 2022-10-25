@@ -1,8 +1,6 @@
-import slugify from 'slugify';
-
 import { FC, useEffect } from 'react';
-import { getLedger } from './helpers/ledger';
-import use$, { useNullable$ } from './helpers/use$';
+import { getLedger, _ledger } from './helpers/ledger';
+import use$ from './helpers/use$';
 import Login from './component/Login';
 import { useStore } from './helpers/store';
 import CreateSheet from './component/CreateSheet';
@@ -10,43 +8,56 @@ import Modal from './component/Modal';
 import SheetPage from './component/Sheet';
 import { Sheet } from '@daml.js/daml-project';
 import assertid from './helpers/assert_id';
-import {
-  createSheet,
-  key,
-  randomSheetTemplate,
-} from './helpers/sheet';
+import { key } from './helpers/sheet';
 import Button from './form/Button';
-import { of } from 'rxjs';
-import { getMaster, getParty } from './helpers/party';
-import { Party } from './config';
+import { map, of } from 'rxjs';
+import { lbind } from './helpers/BiFunctor$';
+import { getMaster } from './helpers/party';
 
-export const ledger$ = of(Party.MASTER).pipe(getLedger);
-export const master$ = getMaster(ledger$);
+export const main$ = of('master').pipe(
+  getLedger,
+  getMaster,
+  lbind((_, m) =>
+    of(m.identifier).pipe(
+      getLedger,
+      map(([l]) => l),
+    ),
+  ),
+);
 
 const App: FC = () => {
   const store = useStore();
-  const { set, owner } = store;
-  const [ledger, master] = use$(master$) || [];
+  const { set, owner, master, ledger } = store;
+
+  const main = use$(main$);
+
+  console.log(store);
 
   useEffect(() => {
-    if (!master || !ledger) return;
-    set({ master, ledger });
-  }, [master, ledger]);
+    if (!main) return;
+    const [l, m] = main;
+
+    set({ master: m, ledger: l });
+  }, [main]);
 
   useEffect(() => {
     if (!ledger || !owner || !master) return;
 
     const name = 'nice';
-    const skey = key(master.identifier, name, owner.identifier);
-
-    console.log(skey);
+    const skey = key(
+      master.identifier,
+      name,
+      owner.identifier,
+    );
 
     ledger
       .fetchByKey(Sheet.Sheet, skey)
       .then((s) => s?.payload)
       .then(assertid())
       .then((sheet) => set({ sheet }))
-      .catch(() => console.warn('No sheet found for', name));
+      .catch(() =>
+        console.warn('No sheet found for', name),
+      );
   }, [ledger, owner, master]);
 
   if (!master || !ledger) return null;

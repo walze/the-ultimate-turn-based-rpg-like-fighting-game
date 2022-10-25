@@ -1,6 +1,12 @@
 import { useState, useEffect, useMemo } from 'react';
-import { catchError, Observable, of, OperatorFunction } from 'rxjs';
-import { assert$ } from './one-liners';
+import {
+  catchError,
+  map,
+  Observable,
+  of,
+  OperatorFunction,
+} from 'rxjs';
+import assert_id from './assert_id';
 
 const use$ = <T>($: Observable<T>) => {
   const [s, setS] = useState<T | null>(null);
@@ -24,7 +30,7 @@ export const useNullable$ = <
   const cb = useMemo(
     () =>
       of(t).pipe(
-        assert$(),
+        map((t) => assert_id('no t')(t)),
         o,
         catchError(() => of(null)),
       ),

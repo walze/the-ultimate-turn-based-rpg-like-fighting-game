@@ -6,7 +6,7 @@ template CharAction with
     sheet : Sheet
   where
     signatory proposer
-    observer master, proposer
+    observer [master, proposer]
 
     let
       master = sheet.master

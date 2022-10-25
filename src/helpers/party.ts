@@ -4,7 +4,7 @@ import Ledger, {
   UserRightHelper,
 } from '@daml/ledger';
 import assert from 'assert';
-import { catchError, find, from, of, pipe } from 'rxjs';
+import { catchError, find, from, pipe } from 'rxjs';
 import { Party } from '../config';
 import assert_id from './assert_id';
 import { pair$, rbind, rmap } from './BiFunctor$';
@@ -14,7 +14,10 @@ const r = /^[a-z0-9@^$.!`\-#+'~_|:]{1,128}$/;
 export const setRights = (rights: UserRight[] = []) =>
   rmap((m: PartyInfo, l: Ledger) => {
     const id = m.displayName;
-    assert(id, `displayName is undefined for ${m.identifier}`);
+    assert(
+      id,
+      `displayName is undefined for ${m.identifier}`,
+    );
     assert(r.test(id), `Invalid party name: ${id}`);
 
     const party = m?.identifier;
@@ -45,7 +48,9 @@ const findParty = (name: string) =>
   pipe(
     rbind((_: string, l: Ledger) => l.listKnownParties()),
     rbind((ps) =>
-      from(ps).pipe(find((p) => p.identifier.includes(name))),
+      from(ps).pipe(
+        find((p) => p.identifier.includes(name)),
+      ),
     ),
   );
 

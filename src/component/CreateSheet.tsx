@@ -1,58 +1,57 @@
 import { FormEvent } from 'react';
-import { map, of } from 'rxjs';
+import { of } from 'rxjs';
 import { useStore } from '../helpers/store';
-import { WEAPONS, BASE_HEALTH, Party } from '../config';
+import { WEAPONS, BASE_HEALTH } from '../config';
 import Input from '../form/Input';
 import Select from '../form/Select';
-import { getLedger } from '../helpers/ledger';
 import { createSheet } from '../helpers/sheet';
-import { rmap } from '../helpers/BiFunctor$';
-import { CharAction } from '@daml.js/daml-project';
 
-const submit =
-  (masterID: string, party: string) =>
-  (e: FormEvent<HTMLFormElement>) => {
-    const { currentTarget: f } = e;
-    e.preventDefault();
+const formatSheet = (e: FormEvent<HTMLFormElement>) => {
+  const { currentTarget: f } = e;
+  e.preventDefault();
 
-    if (!f) return;
-    const ar = Array.from(f.elements) as HTMLInputElement[];
-    const inputs = Object.fromEntries(
-      ar.filter((e) => e.name).map((e) => [e.name, e.value]),
-    );
+  if (!f) return;
+  const ar = Array.from(f.elements) as HTMLInputElement[];
+  const inputs = Object.fromEntries(
+    ar.filter((e) => e.name).map((e) => [e.name, e.value]),
+  );
 
-    const weapon = WEAPONS.find((w) => w.name === inputs['weapon']);
-    if (!weapon) return;
+  const weapon = WEAPONS.find(
+    (w) => w.name === inputs['weapon'],
+  );
+  if (!weapon) return;
 
-    // @ts-ignore
-    const sheet: Partial<Sheet.Sheet> = {
-      name: inputs['name'],
-      weapon: weapon,
-      hp: BASE_HEALTH * +weapon.ad + '',
-    };
-
-    of(party)
-      .pipe(
-        getLedger,
-        rmap(() => party),
-        createSheet(masterID, sheet),
-      )
-      .subscribe(console.warn);
+  // @ts-ignore
+  const sheet: Partial<Sheet.Sheet> = {
+    name: inputs['name'],
+    weapon: weapon,
+    hp: BASE_HEALTH * +weapon.ad + '',
   };
 
-export default () => {
-  const { master, owner } = useStore();
+  return sheet;
+};
 
-  if (!master || !owner) return <>Loading...</>;
+export default () => {
+  const { master, owner, ledger } = useStore();
 
   return (
     <form
       className="[&>*]:mb-4"
-      onSubmit={submit(master?.identifier, owner?.identifier)}
+      onSubmit={(e) => {
+        const sheet = formatSheet(e);
+        if (!master || !owner || !ledger) return;
+
+        of([ledger, owner.identifier] as const)
+          .pipe(createSheet(master.identifier, sheet))
+          .subscribe(console.warn);
+      }}
     >
       <Input label="Name" placeholder="Character name" />
 
-      <Select name="weapon" list={WEAPONS.map((w) => w.name)} />
+      <Select
+        name="weapon"
+        list={WEAPONS.map((w) => w.name)}
+      />
 
       <button
         type="submit"

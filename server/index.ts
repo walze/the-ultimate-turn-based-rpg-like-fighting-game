@@ -17,7 +17,8 @@ app.use(bparser.urlencoded({ extended: true }));
 
 app.listen(3000, () => {
   console.log(
-    'Server started on port 3000' + (isDocker ? ' (Docker)' : ''),
+    'Server started on port 3000' +
+      (isDocker ? ' (Docker)' : ''),
   );
 });
 
@@ -26,5 +27,7 @@ app.post('/token', (req, res) => {
   console.log(req.body);
   console.log('------------------------');
 
-  res.send(sign(req.body, SECRET));
+  setTimeout(() => {
+    res.send(sign(req.body, SECRET));
+  }, 500);
 });
