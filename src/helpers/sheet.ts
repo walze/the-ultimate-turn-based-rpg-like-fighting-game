@@ -12,7 +12,6 @@ import { BASE_HEALTH, WEAPONS } from '../config';
 import { acceptSheetCreate } from './action';
 import { bbind, rbind, rmap } from './BiFunctor$';
 import { getName } from './name-api';
-import { getParty } from './party';
 
 // export const createSheet_ = (
 //   masterID: string,
@@ -40,7 +39,7 @@ export const createSheet = (
   pipe(
     bbind((l: Ledger, name: string) =>
       of([l, name] as const).pipe(
-        getParty(name),
+        getUser(name),
         rmap(
           (party) =>
             ({

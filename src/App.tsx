@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { getLedger, _ledger } from './helpers/ledger';
 import use$ from './helpers/use$';
 import Login from './component/Login';
@@ -6,63 +6,70 @@ import { useStore } from './helpers/store';
 import CreateSheet from './component/CreateSheet';
 import Modal from './component/Modal';
 import SheetPage from './component/Sheet';
-import { Sheet } from '@daml.js/daml-project';
-import assertid from './helpers/assert_id';
-import { key } from './helpers/sheet';
 import Button from './form/Button';
-import { map, of } from 'rxjs';
-import { lbind } from './helpers/BiFunctor$';
-import { getMaster } from './helpers/party';
+import { from, map, of, pipe, tap } from 'rxjs';
+import { rbind } from './helpers/BiFunctor$';
+import Ledger, { User } from '@daml/ledger';
 
-export const main$ = of('master').pipe(
-  getLedger,
-  getMaster,
-  lbind((_, m) =>
-    of(m.identifier).pipe(
-      getLedger,
-      map(([l]) => l),
+const intersectUsers = (ids: string[]) =>
+  pipe(
+    map((users: User[]) =>
+      users.filter((user) =>
+        ids.some((id) => user.primaryParty?.includes(id)),
+      ),
     ),
+  );
+
+export const getMain = pipe(
+  getLedger,
+  rbind((ps, l) =>
+    from(l.listUsers()).pipe(
+      intersectUsers(ps),
+      map((us) => us.map((u) => u.primaryParty!)),
+      getLedger,
+      map((ab) => ab[1]),
+    ),
+  ),
+  rbind((ids: string[], l: Ledger) =>
+    from(l.listUsers()).pipe(intersectUsers(ids)),
   ),
 );
 
 const App: FC = () => {
   const store = useStore();
-  const { set, owner, master, ledger } = store;
+  const { ledger, names: uNames } = store;
 
-  const main = use$(main$);
-
-  console.log(store);
-
-  useEffect(() => {
-    if (!main) return;
-    const [l, m] = main;
-
-    set({ master: m, ledger: l });
-  }, [main]);
-
-  useEffect(() => {
-    if (!ledger || !owner || !master) return;
-
-    const name = 'nice';
-    const skey = key(
-      master.identifier,
-      name,
-      owner.identifier,
-    );
-
-    ledger
-      .fetchByKey(Sheet.Sheet, skey)
-      .then((s) => s?.payload)
-      .then(assertid())
-      .then((sheet) => set({ sheet }))
-      .catch(() =>
-        console.warn('No sheet found for', name),
-      );
-  }, [ledger, owner, master]);
-
-  if (!master || !ledger) return <>LOADING... App.tsx</>;
+  const main$ = useMemo(
+    () => of(uNames.filter(Boolean) as string[]).pipe(getMain),
+    uNames,
+  );
+  const main = use$(main$) || [];
 
   const isLogged = !!store.owner;
+
+  useEffect(() => {
+    const [ledger, parties] = main;
+    if (!ledger || !parties) return;
+
+    store.set({ ledger, parties });
+  }, [main]);
+
+  // useEffect(() => {
+  //   if (!ledger || !owner || !master) return;
+
+  //   const name = 'nice';
+  //   const skey = key(master, name, owner.identifier);
+
+  //   ledger
+  //     .fetchByKey(Sheet.Sheet, skey)
+  //     .then((s) => s?.payload)
+  //     .then(assertid())
+  //     .then((sheet) => set({ sheet }))
+  //     .catch(() => console.warn('No sheet found for', name));
+  // }, [ledger, owner, master]);
+
+  if (!ledger) return <>LOADING... App.tsx</>;
+
   const hasSheet = !!store.sheet;
 
   return (

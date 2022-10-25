@@ -2,9 +2,6 @@ import { Weapon } from '@daml.js/daml-project';
 import { mergeMap, of } from 'rxjs';
 import { fromFetch } from 'rxjs/fetch';
 
-import { getLedger } from './helpers/ledger';
-import { getMaster } from './helpers/party';
-
 const domain = process.env['DOMAIN'] ?? 'localhost';
 
 export const Sword: Weapon.Weapon = {
@@ -17,21 +14,16 @@ export const Dagger: Weapon.Weapon = {
   ad: '5',
 };
 
-export enum Party {
-  OWNER = 'marcus',
-  MASTER = 'master',
-  GOBLIN = 'goblin',
-}
-
 export const BASE_HEALTH = 8;
 export const WEAPONS = [Sword, Dagger];
 
-export const getToken = (party: string) => {
+export const getToken = (party: string[]) => {
   const data = {
     'https://daml.com/ledger-api': {
       ledgerId: 'sandbox',
-      applicationId: process.env['APPLICATION_ID'] ?? 'daml-project',
-      actAs: [party],
+      applicationId:
+        process.env['APPLICATION_ID'] ?? 'daml-project',
+      actAs: party,
     },
   };
 

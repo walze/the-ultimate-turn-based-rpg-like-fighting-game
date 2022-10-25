@@ -7,10 +7,13 @@ import {
   of,
 } from 'rxjs';
 
-export const pair = <A, B>(a: A, b: B) => [a, b] as readonly [A, B];
-export const pair$ = <A, B>(a: A, b: B) => of(pair(a, b));
+export const pair = <A, B>(a: A, b: B) =>
+  [a, b] as readonly [A, B];
 
 export type Pair<A, B> = Observable<readonly [A, B]>;
+
+export const pair$ = <A, B>(a: A, b: B) =>
+  of(pair(a, b)) as Pair<A, B>;
 
 export type lmap = <A, B, C>(
   f: (a: A, c: C) => B,
@@ -56,12 +59,16 @@ export const bmap: bmap = (f) => (p) =>
 
 export const lbind: lbind = (f) => (p) =>
   p.pipe(
-    mergeMap(([a, b]) => from(f(a, b)).pipe(map((c) => pair(c, b)))),
+    mergeMap(([a, b]) =>
+      from(f(a, b)).pipe(map((c) => pair(c, b))),
+    ),
   );
 
 export const rbind: rbind = (f) => (p) =>
   p.pipe(
-    mergeMap(([a, b]) => from(f(b, a)).pipe(map((c) => pair(a, c)))),
+    mergeMap(([a, b]) =>
+      from(f(b, a)).pipe(map((c) => pair(a, c))),
+    ),
   );
 
 export const bbind: bbind = (f) => (p) =>
@@ -69,5 +76,12 @@ export const bbind: bbind = (f) => (p) =>
 
 export const fbind: fbind = (f) => (p) =>
   p.pipe(
-    mergeMap(([a, b]) => from(f(a, b)).pipe(map((c) => pair(c, b)))),
+    mergeMap(([a, b]) =>
+      from(f(a, b)).pipe(map((c) => pair(c, b))),
+    ),
   );
+
+export const fst$ = <A, B>(p: Pair<A, B>) =>
+  p.pipe(map(([a]) => a));
+export const snd$ = <A, B>(p: Pair<A, B>) =>
+  p.pipe(map(([, b]) => b));

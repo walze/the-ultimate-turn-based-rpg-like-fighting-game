@@ -13,7 +13,7 @@ export const _ledger = (token: string = '') =>
   });
 
 export const getLedger = pipe(
-  map((p: string) => pair(p, p)),
+  map((p: string[]) => pair(p, p)),
   lbind(getToken),
   lmap(_ledger),
 );
