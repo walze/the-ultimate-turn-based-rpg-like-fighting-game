@@ -20,7 +20,7 @@ export const createUser = (rights?: UserRight[]) =>
         UserRightHelper.canReadAs(name),
       ],
       name,
-    );
+    ).catch(console.error);
 
     return name;
   });

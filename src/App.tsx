@@ -7,37 +7,54 @@ import CreateSheet from './component/CreateSheet';
 import Modal from './component/Modal';
 import SheetPage from './component/Sheet';
 import Button from './form/Button';
-import { from, map, of, pipe, tap } from 'rxjs';
+import {
+  from,
+  map,
+  mergeAll,
+  mergeMap,
+  Observable,
+  of,
+  pipe,
+  tap,
+  toArray,
+} from 'rxjs';
 import { rbind } from './helpers/BiFunctor$';
 import Ledger, { User } from '@daml/ledger';
+import Loading from './component/Loading';
+import { createUser } from './helpers/user';
 
-const intersectUsers = (ids: string[]) =>
+const matchUsers = (l: Ledger, ids: string[]) =>
   pipe(
-    map((users: User[]) =>
-      users.filter((user) =>
-        ids.some((id) => user.primaryParty?.includes(id)),
-      ),
+    mergeMap((users: User[]) =>
+      ids.map((id) => {
+        const user = users.find((u) =>
+          u.primaryParty?.includes(id),
+        );
+
+        return user?.primaryParty
+          ? of(user.primaryParty)
+          : of([l, id] as const).pipe(
+              createUser(),
+              map((ab) => ab[1]),
+            );
+      }),
     ),
+    mergeAll(),
+    toArray(),
   );
 
 export const getMain = pipe(
   getLedger,
-  rbind((ps, l) =>
-    from(l.listUsers()).pipe(
-      intersectUsers(ps),
-      map((us) => us.map((u) => u.primaryParty!)),
-      getLedger,
-      map((ab) => ab[1]),
-    ),
-  ),
   rbind((ids: string[], l: Ledger) =>
-    from(l.listUsers()).pipe(intersectUsers(ids)),
+    from(l.listUsers()).pipe(matchUsers(l, ids)),
   ),
 );
 
 const App: FC = () => {
   const store = useStore();
-  const { ledger, names: uNames } = store;
+  const { ledger } = store;
+
+  const uNames = [store.master, store.owner, store.foe];
 
   const main$ = useMemo(
     () => of(uNames.filter(Boolean) as string[]).pipe(getMain),
@@ -50,6 +67,8 @@ const App: FC = () => {
   useEffect(() => {
     const [ledger, parties] = main;
     if (!ledger || !parties) return;
+
+    ledger.getUser('master').then(console.log);
 
     store.set({ ledger, parties });
   }, [main]);
@@ -68,7 +87,7 @@ const App: FC = () => {
   //     .catch(() => console.warn('No sheet found for', name));
   // }, [ledger, owner, master]);
 
-  if (!ledger) return <>LOADING... App.tsx</>;
+  if (!ledger) return <Loading />;
 
   const hasSheet = !!store.sheet;
 
