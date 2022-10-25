@@ -60,7 +60,7 @@ const App: FC = () => {
       );
   }, [ledger, owner, master]);
 
-  if (!master || !ledger) return null;
+  if (!master || !ledger) return <>LOADING... App.tsx</>;
 
   const isLogged = !!store.owner;
   const hasSheet = !!store.sheet;
