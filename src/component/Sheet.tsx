@@ -1,6 +1,6 @@
 import { Sheet } from '@daml.js/daml-project';
 import { useEffect } from 'react';
-import assert from '../helpers/assert';
+import assert from '../helpers/assertid';
 import { key } from '../helpers/sheet';
 import { useStore } from '../helpers/store';
 

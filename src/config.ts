@@ -2,8 +2,8 @@ import { Weapon } from '@daml.js/daml-project';
 import { mergeMap, of } from 'rxjs';
 import { fromFetch } from 'rxjs/fetch';
 
-import getMaster from './helpers/getMaster';
 import { getLedger } from './helpers/ledger';
+import { getMaster } from './helpers/party';
 
 const domain = process.env['DOMAIN'] ?? 'localhost';
 
@@ -25,9 +25,6 @@ export enum Party {
 
 export const BASE_HEALTH = 8;
 export const WEAPONS = [Sword, Dagger];
-
-export const ledger = getLedger(of(Party.MASTER));
-export const master$ = getMaster(ledger);
 
 export const getToken = (party: string) => {
   const data = {

@@ -1,4 +1,8 @@
-const Button = ({ children, ...props }: Props) => (
+import { ButtonHTMLAttributes } from 'react';
+
+type P = Props & ButtonHTMLAttributes<HTMLButtonElement>;
+
+const Button = ({ children, ...props }: P) => (
   <button
     {...props}
     className={css(

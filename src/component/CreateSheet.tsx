@@ -1,11 +1,12 @@
 import { FormEvent } from 'react';
-import { of } from 'rxjs';
+import { map, of } from 'rxjs';
 import { useStore } from '../helpers/store';
 import { WEAPONS, BASE_HEALTH, Party } from '../config';
 import Input from '../form/Input';
 import Select from '../form/Select';
 import { getLedger } from '../helpers/ledger';
 import { createSheet } from '../helpers/sheet';
+import { rmap } from '../helpers/BiFunctor$';
 
 const submit = (party: string) => (e: FormEvent<HTMLFormElement>) => {
   const { currentTarget: f } = e;
@@ -27,8 +28,12 @@ const submit = (party: string) => (e: FormEvent<HTMLFormElement>) => {
     hp: BASE_HEALTH * +weapon.ad + '',
   };
 
-  getLedger(of(party))
-    .pipe(createSheet(party, Party.WALLACE, sheet))
+  of(party)
+    .pipe(
+      getLedger,
+      rmap(() => party),
+      createSheet(party, sheet),
+    )
     .subscribe(console.warn);
 };
 

@@ -39,6 +39,7 @@ specifiers:
   react-dom: ^18.2.0
   rxjs: ^7.5.7
   sass: ^1.55.0
+  slugify: ^1.6.5
   tailwindcss: ^3.2.1
   ts-node: ^10.9.1
   ts-node-dev: ^2.0.0
@@ -75,6 +76,7 @@ dependencies:
   react-dom: 18.2.0_react@18.2.0
   rxjs: 7.5.7
   sass: 1.55.0
+  slugify: 1.6.5
   ts-node: 10.9.1_lw7q66ikwuedwcorwkk4v6trsa
   ts-node-dev: 2.0.0_lw7q66ikwuedwcorwkk4v6trsa
   zustand: 4.1.3_react@18.2.0
@@ -2413,6 +2415,11 @@ packages:
   /slash/4.0.0:
     resolution: {integrity: sha512-3dOsAHXXUkQTpOYcoAxLIorMTp4gIQr5IW3iVb7A7lFIp0VHhnynm9izx6TssdrIcVIESAlVjtnO2K8bg+Coew==}
     engines: {node: '>=12'}
+    dev: false
+
+  /slugify/1.6.5:
+    resolution: {integrity: sha512-8mo9bslnBO3tr5PEVFzMPIWwWnipGS0xVbYf65zxDqfNwmzYn1LpiKNrR6DlClusuvo+hDHd1zKpmfAe83NQSQ==}
+    engines: {node: '>=8.0.0'}
     dev: false
 
   /source-map-js/1.0.2:

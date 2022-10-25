@@ -17,9 +17,9 @@ const submit =
     const party = formData.get('username') as string;
     if (!ledger || !party) return;
 
-    of(ledger)
+    of([ledger, party] as const)
       .pipe(getParty(party))
-      .subscribe((party) => {
+      .subscribe(([, party]) => {
         set({ owner: party });
       });
   };
@@ -33,9 +33,9 @@ export default () => {
     );
 
     if (ledger && name)
-      of(ledger)
+      of([ledger, name] as const)
         .pipe(getParty(name))
-        .subscribe((party) => {
+        .subscribe(([, party]) => {
           set({ owner: party });
         });
   }, []);
