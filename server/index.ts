@@ -29,5 +29,7 @@ app.post('/token', (req, res) => {
 
   res.setHeader('Content-Type', 'text/plain');
 
-  res.end(sign(req.body, SECRET));
+  setTimeout(() => {
+    res.end(sign(req.body, SECRET));
+  }, 200);
 });

@@ -3,7 +3,7 @@ import Ledger from '@daml/ledger';
 import { of, map, lastValueFrom, pipe } from 'rxjs';
 import { BASE_HEALTH, WEAPONS } from '../config';
 import { acceptSheetCreate } from './action';
-import { bbind, rmap } from './BiFunctor$';
+import { bbind, rbind, rmap } from './BiFunctor$';
 import { getName } from './name-api';
 import { findParty } from './user';
 
@@ -26,6 +26,11 @@ export const createSheet = (
       map((sheet) => [l, sheet]),
     ),
   );
+
+export const deleteSheet = rbind(
+  (k: Sheet.Sheet.Key, l: Ledger) =>
+    l.archiveByKey(Sheet.Sheet, k),
+);
 
 export const randomSheetTemplate =
   async (): Promise<Sheet.Sheet> => {
@@ -52,10 +57,14 @@ export const key = (
   master: string,
   name: string,
   identifier: string,
-) => ({
+): Sheet.Sheet.Key => ({
   _1: master,
   _2: {
     _1: name,
     _2: identifier,
   },
 });
+
+// check they are all string and not empty
+export const isKeyValid = (key: Sheet.Sheet.Key) =>
+  key._1 && key._2._1 && key._2._2;

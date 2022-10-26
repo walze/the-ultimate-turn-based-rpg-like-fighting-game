@@ -4,7 +4,7 @@ import Ledger, {
 } from '@daml/ledger';
 import assert from 'assert';
 import { of, pipe } from 'rxjs';
-import { pair$, rbind, rmap, snd$ } from './BiFunctor$';
+import { pure, rbind, rmap, snd$ } from './BiFunctor$';
 
 const r = /^[a-z0-9@^$.!`\-#+'~_|:]{1,128}$/;
 
@@ -61,7 +61,7 @@ export const findParty = pipe(
 export const findOrCreate = rbind((p: string, l: Ledger) =>
   of([l, p] as const).pipe(
     findParty,
-    rbind((u) => (u ? pair$(l, u) : allocParty(pair$(l, p)))),
+    rbind((u) => (u ? pure(l, u) : allocParty(pure(l, p)))),
     rmap(([, p]) => {
       assert(p, `Failed to allocate party: ${p}`);
 

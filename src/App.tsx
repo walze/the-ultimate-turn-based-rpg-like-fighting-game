@@ -7,21 +7,36 @@ import CreateSheet from './component/CreateSheet';
 import Modal from './component/Modal';
 import SheetPage from './component/Sheet';
 import Button from './form/Button';
-import { concatMap, from, map, of, pipe, toArray } from 'rxjs';
-import { pair$, rbind, snd$ } from './helpers/BiFunctor$';
+import {
+  concatMap,
+  from,
+  map,
+  of,
+  pipe,
+  tap,
+  toArray,
+} from 'rxjs';
+import { pure, rbind, snd$ } from './helpers/BiFunctor$';
 import Ledger from '@daml/ledger';
 import Loading from './component/Loading';
 import { findOrCreate } from './helpers/user';
-import { key } from './helpers/sheet';
+import {
+  deleteSheet,
+  isKeyValid,
+  key,
+  randomSheetTemplate,
+} from './helpers/sheet';
 import { Sheet } from '@daml.js/daml-project';
 import assert_id from './helpers/assert_id';
 import SheetSelect from './component/SheetSelect';
+import slugify from 'slugify';
+import { TrashIcon } from '@heroicons/react/24/solid';
 
 export const getMain = pipe(
   getLedger,
   rbind((ids: string[], l: Ledger) =>
     from(ids).pipe(
-      concatMap((id) => findOrCreate(pair$(l, id))),
+      concatMap((id) => findOrCreate(pure(l, id))),
       snd$,
       map((u) => u.identifier),
       toArray(),
@@ -36,6 +51,11 @@ const App: FC = () => {
 
   const uNames = [store.master, store.owner, store.foe];
   const { ledger, party, set } = store;
+  const skey = key(
+    party.master || '',
+    store.sheet.name || '',
+    party.owner || '',
+  );
 
   const main$ = useMemo(
     () => of(uNames.filter(Boolean) as string[]).pipe(getMain),
@@ -57,10 +77,7 @@ const App: FC = () => {
 
   useEffect(() => {
     const name = store.sheet.name;
-    if (!ledger || !party.master || !party.owner || !name)
-      return;
-
-    const skey = key(party.master, name, party.owner);
+    if (!ledger || !isKeyValid(skey)) return;
 
     ledger
       .fetchByKey(Sheet.Sheet, skey)
@@ -70,7 +87,8 @@ const App: FC = () => {
       .catch(() => console.warn('No sheet found for', name));
   }, [ledger, store.sheet.name]);
 
-  const hasSheet = !!store.sheet.name;
+  const hasSheetName = !!store.sheet.name;
+  const hasSheetOwner = !!store.sheet.owner;
   const isLogged = !!store.owner;
 
   if (!ledger || !party.master) return <Loading />;
@@ -81,7 +99,7 @@ const App: FC = () => {
         The Ultimate Turn-Based RPG Like Fighting Game
       </h1>
 
-      <Modal show={!store.sheet?.name}>
+      <Modal show={isLogged && !hasSheetName}>
         <SheetSelect />
       </Modal>
 
@@ -89,30 +107,60 @@ const App: FC = () => {
         <Login />
       </Modal>
 
-      {isLogged && hasSheet && (
+      {isLogged && hasSheetOwner && (
         <>
           <Button
             onClick={async () => {
-              // const sheet = await randomSheetTemplate();
-              // const partyName = slugify(
-              //   sheet.name,
-              // ).toLocaleLowerCase();
-              // // of([ledger, undefined] as const)
-              // //   .pipe(
-              // //     getParty(partyName),
-              // //     // createSheet(master.identifier, partyName, sheet),
-              // //   )
-              // //   .subscribe(console.log);
+              const sheet = await randomSheetTemplate();
+              const pName = slugify(
+                sheet.name,
+              ).toLocaleLowerCase();
+
+              console.log(pName);
+
+              // of([ledger, undefined] as const)
+              //   .pipe(
+              //     getParty(partyName),
+              //     // createSheet(master.identifier, partyName, sheet),
+              //   )
+              //   .subscribe(console.log);
             }}
           >
             Find new foe
           </Button>
 
           <SheetPage />
+
+          <Button
+            className="bg-red-600"
+            onClick={() => {
+              if (!ledger || !isKeyValid(skey)) return;
+
+              pure(ledger, skey)
+                .pipe(
+                  tap(console.log),
+                  deleteSheet,
+                  tap(console.log),
+                  tap(() => {
+                    set({ sheet: {} });
+                    window.location.replace('/');
+                  }),
+                )
+                .subscribe(console.warn);
+            }}
+          >
+            Delete Sheet
+            <TrashIcon
+              className="ml-2 -mr-0.5 h-4 w-4"
+              aria-hidden="true"
+            />
+          </Button>
         </>
       )}
 
-      {isLogged && !hasSheet && <CreateSheet />}
+      {isLogged && hasSheetName && !hasSheetOwner && (
+        <CreateSheet />
+      )}
     </section>
   );
 };

@@ -47,7 +47,11 @@ export default () => {
           .subscribe(console.warn);
       }}
     >
-      <Input label="Name" placeholder="Character name" />
+      <Input
+        autoFocus
+        label="Name"
+        placeholder="Character name"
+      />
 
       <Select name="weapon" list={WEAPONS.map((w) => w.name)} />
 

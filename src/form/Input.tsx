@@ -1,10 +1,17 @@
+import { InputHTMLAttributes } from 'react';
+
 type Props = {
   label: string;
   placeholder?: string;
   name?: string;
-};
+} & InputHTMLAttributes<HTMLInputElement>;
 
-export default ({ label, placeholder, name }: Props) => {
+export default ({
+  label,
+  placeholder,
+  name,
+  ...props
+}: Props) => {
   const id = label.toLowerCase().replace(' ', '-');
 
   return (
@@ -22,6 +29,7 @@ export default ({ label, placeholder, name }: Props) => {
         id={id}
         className="mt-1 block w-full border-0 p-0 text-gray-900 placeholder-gray-400 focus:ring-0 sm:text-sm"
         placeholder={placeholder}
+        {...props}
       />
     </div>
   );

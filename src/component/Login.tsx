@@ -37,7 +37,11 @@ export default () => {
         Login
       </h3>
 
-      <Input label="Username" placeholder="your username" />
+      <Input
+        autoFocus
+        label="Username"
+        placeholder="your username"
+      />
 
       <Button>Sign in</Button>
     </form>

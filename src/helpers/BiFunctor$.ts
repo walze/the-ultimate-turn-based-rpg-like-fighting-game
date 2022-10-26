@@ -12,7 +12,7 @@ export const pair = <A, B>(a: A, b: B) =>
 
 export type Pair<A, B> = Observable<readonly [A, B]>;
 
-export const pair$ = <A, B>(a: A, b: B) =>
+export const pure = <A, B>(a: A, b: B) =>
   of(pair(a, b)) as Pair<A, B>;
 
 export type lmap = <A, B, C>(

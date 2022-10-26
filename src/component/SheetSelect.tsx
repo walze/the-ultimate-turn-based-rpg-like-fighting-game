@@ -36,6 +36,7 @@ export default () => {
       </h3>
 
       <Input
+        autoFocus
         label="Your character's name"
         name="sheet"
         placeholder="A new challenger approaches..."
