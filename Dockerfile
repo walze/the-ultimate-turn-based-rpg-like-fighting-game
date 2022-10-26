@@ -21,7 +21,7 @@ WORKDIR /app
 
 EXPOSE 3000
 
-CMD ["pnpm", "watch:serve"]
+CMD ["pnpm", "start:server"]
 
 # build the client
 FROM install AS client

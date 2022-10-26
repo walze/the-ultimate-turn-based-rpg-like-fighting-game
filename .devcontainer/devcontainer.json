@@ -2,7 +2,7 @@
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.245.2/containers/docker-existing-docker-compose
 // If you want to run as a non-root user in the container, see .devcontainer/docker-compose.yml.
 {
-  "name": "Daml | Project",
+  "name": "TUTBRPGLFG",
 
   // Update the 'dockerComposeFile' list if you have more compose files or use different names.
   // The .devcontainer/docker-compose.yml file contains any overrides you need/want to make.
@@ -14,18 +14,9 @@
 
   // The optional 'workspaceFolder' property is the path VS Code should open by default when
   // connected. This is typically a file mount in .devcontainer/docker-compose.yml
-  "workspaceFolder": "/workspace",
+  "workspaceFolder": "/app",
 
   "features": {
-    "ghcr.io/devcontainers/features/git:1": {
-      "version": "latest"
-    },
-    "ghcr.io/devcontainers/features/git-lfs:1": {
-      "version": "latest"
-    },
-    "ghcr.io/devcontainers/features/github-cli:1": {
-      "version": "latest"
-    },
     "ghcr.io/devcontainers/features/node:1": {
       "version": "latest"
     }
@@ -38,11 +29,11 @@
   // "runServices": [],
 
   // Uncomment the next line if you want to keep your containers running after VS Code shuts down.
-  // "shutdownAction": "none",
+  "shutdownAction": "none"
 
   // Uncomment the next line to run commands after the container is created - for example installing curl.
-  "postCreateCommand": "pnpm start:client",
+  // "postCreateCommand": "pnpm start:client",
 
   // Uncomment to connect as a non-root user if you've added one. See https://aka.ms/vscode-remote/containers/non-root.
-  "remoteUser": "vscode"
+  // "remoteUser": "vscode"
 }

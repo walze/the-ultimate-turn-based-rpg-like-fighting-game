@@ -1,7 +1,7 @@
 
 services:
   server:
-    image: daml-project/server:1.0.0
+    image: tutbrpglfg/server
     build:
       context: .
       target: server
@@ -16,7 +16,7 @@ services:
     working_dir: /app
 
   client:
-    image: daml-project/client:1.0.0
+    image: tutbrpglfg/client
     build:
       context: .
       target: client

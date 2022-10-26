@@ -3,6 +3,6 @@
   "watch": "./server/index.ts",
   "ext": "*.ts",
   "execMap": {
-    "ts": "pnpm dev:serve"
+    "ts": "pnpm build:server"
   }
 }
