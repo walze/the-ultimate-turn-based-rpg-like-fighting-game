@@ -1,15 +1,9 @@
-import assert_id from './assert_id';
 import { useState, useEffect, useMemo } from 'react';
-import {
-  catchError,
-  map,
-  Observable,
-  of,
-  OperatorFunction,
-} from 'rxjs';
+import { Observable } from 'rxjs';
 
-const use$ = <T>($: Observable<T>) => {
+const use$ = <T>(f: () => Observable<T>, deps: any[]) => {
   const [s, ss] = useState<T | null>(null);
+  const $ = useMemo(() => f(), deps);
 
   useEffect(() => {
     const sub = $?.subscribe(ss);
@@ -18,26 +12,6 @@ const use$ = <T>($: Observable<T>) => {
   }, [$]);
 
   return s;
-};
-
-export const useNullable$ = <
-  T,
-  O extends OperatorFunction<NonNullable<T>, any>,
->(
-  t: T,
-  o: O,
-) => {
-  const cb = useMemo(
-    () =>
-      of(t).pipe(
-        map((t) => assert_id('no t')(t)),
-        o,
-        catchError(() => of(null)),
-      ),
-    [t, o],
-  );
-
-  return use$(cb);
 };
 
 export default use$;

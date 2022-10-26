@@ -2,7 +2,7 @@ import { useStore } from '../helpers/store';
 import Input from '../form/Input';
 import { FormEvent, useEffect } from 'react';
 import Button from '../form/Button';
-import coc from 'js-cookie';
+import cookie from 'js-cookie';
 
 const submit =
   (set: (s: string) => void) =>
@@ -22,13 +22,13 @@ export default () => {
   const { set } = useStore();
 
   const handleSubmit = (owner: string) => {
-    coc.set('owner', owner, { expires: 0.004 });
+    cookie.set('owner', owner, { expires: 0.004 });
 
     set({ owner });
   };
 
   useEffect(() => {
-    const owner = coc.get('owner');
+    const owner = cookie.get('owner');
 
     if (owner) handleSubmit(owner);
   }, []);

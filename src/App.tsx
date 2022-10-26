@@ -49,20 +49,12 @@ const App: FC = () => {
 
   const uNames = [store.master, store.owner, store.foe];
   const { ledger, party, set } = store;
-  const skey = key(
-    party.master || '',
-    store.sheet.name || '',
-    party.owner || '',
-  );
 
-  const main$ = useMemo(
-    () => of(uNames.filter(Boolean) as string[]).pipe(getMain),
-    uNames,
-  );
-
-  const main = use$(main$) || [];
-
-  console.log(store);
+  const main =
+    use$(
+      () => of(uNames.filter(Boolean) as string[]).pipe(getMain),
+      uNames,
+    ) || [];
 
   useEffect(() => {
     const [ledger, parties] = main;
@@ -104,12 +96,13 @@ const App: FC = () => {
 
               console.log(pName);
 
-              // of([ledger, undefined] as const)
-              //   .pipe(
-              //     getParty(partyName),
-              //     // createSheet(master.identifier, partyName, sheet),
-              //   )
-              //   .subscribe(console.log);
+              pure(ledger, pName)
+                .pipe(
+                  findOrCreate,
+                  tap(console.log),
+                  // createSheet(master.identifier, partyName, sheet),
+                )
+                .subscribe(console.log);
             }}
           >
             Find new foe
@@ -120,6 +113,12 @@ const App: FC = () => {
           <Button
             className="bg-red-600"
             onClick={() => {
+              const skey = key(
+                party.master || '',
+                store.sheet.name || '',
+                party.owner || '',
+              );
+
               if (!ledger || !isKeyValid(skey)) return;
 
               pure(ledger, skey)

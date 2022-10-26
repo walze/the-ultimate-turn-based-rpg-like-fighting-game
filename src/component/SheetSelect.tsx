@@ -9,11 +9,6 @@ import { isKeyValid, key } from '../helpers/sheet';
 
 export default () => {
   const { set, sheet, ledger, party } = useStore();
-  const skey = key(
-    party.master || '',
-    sheet.name || '',
-    party.owner || '',
-  );
 
   const handleSubmit = (name: string) => {
     cookie.set('sheet', name, { expires: 0.004 });
@@ -22,7 +17,13 @@ export default () => {
   };
 
   useEffect(() => {
-    const name = sheet.name || cookie.get('sheet');
+    const name = sheet.name || cookie.get('sheet') || '';
+    const skey = key(
+      party.master || '',
+      name,
+      party.owner || '',
+    );
+
     if (!ledger || !isKeyValid(skey)) return;
 
     ledger
