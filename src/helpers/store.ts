@@ -20,7 +20,9 @@ export interface State {
   foe?: string;
 
   ledger?: Ledger;
-  sheet: Partial<Sheet.Sheet>;
+
+  ownerSheet: Partial<Sheet.Sheet>;
+  foeSheet: Partial<Sheet.Sheet>;
 
   set: (s: Partial<State>) => void;
 }
@@ -34,7 +36,8 @@ export const useStore = create<State>((set) => ({
     owner: undefined,
   },
 
-  sheet: {},
+  foeSheet: {},
+  ownerSheet: {},
 
   master: DEFAULT_MASTER,
 

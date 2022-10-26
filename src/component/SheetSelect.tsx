@@ -8,16 +8,16 @@ import assert_id from '../helpers/assert_id';
 import { isKeyValid, key } from '../helpers/sheet';
 
 export default () => {
-  const { set, sheet, ledger, party } = useStore();
+  const { set, ownerSheet, ledger, party } = useStore();
 
   const handleSubmit = (name: string) => {
     cookie.set('sheet', name, { expires: 0.004 });
 
-    set({ sheet: { ...sheet, name } });
+    set({ ownerSheet: { ...ownerSheet, name } });
   };
 
   useEffect(() => {
-    const name = sheet.name || cookie.get('sheet') || '';
+    const name = ownerSheet.name || cookie.get('sheet') || '';
     const skey = key(
       party.master || '',
       name,
@@ -30,13 +30,13 @@ export default () => {
       .fetchByKey(Sheet.Sheet, skey)
       .then((s) => s?.payload)
       .then(assert_id())
-      .then((sheet) => set({ sheet }))
+      .then((ownerSheet) => set({ ownerSheet }))
       .catch(() => {
         console.warn('No sheet found for', name);
 
         cookie.remove('sheet');
       });
-  }, [ledger, sheet.name]);
+  }, [ledger, ownerSheet.name]);
 
   return (
     <form

@@ -21,8 +21,13 @@ const Stat = ({ name, value }: StatProps) => (
   </li>
 );
 
-export default () => {
-  const { sheet } = useStore();
+type Props = {
+  sheet: Partial<Sheet.Sheet>
+}
+
+
+export default (props: Props) => {
+  const { sheet } = props;
 
   if (!sheet.weapon) return <Loading label="sheet" />;
 
@@ -33,7 +38,6 @@ export default () => {
   } = sheet;
 
   return (
-    <>
       <article className="w-full mx-auto max-w-lg overflow-hidden bg-white rounded-lg shadow-lg">
         <div className="flex items-center px-6 py-3 bg-gray-900">
           <h2 className="text-lg font-bold text-white">
@@ -51,6 +55,5 @@ export default () => {
           </ul>
         </div>
       </article>
-    </>
   );
 };

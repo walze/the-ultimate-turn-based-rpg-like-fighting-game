@@ -16,11 +16,12 @@ import {
   tap,
   toArray,
 } from 'rxjs';
-import { pure, rbind, snd$ } from './helpers/BiFunctor$';
+import { pure, rbind, rmap, snd$ } from './helpers/BiFunctor$';
 import Ledger from '@daml/ledger';
 import Loading from './component/Loading';
 import { findOrCreate } from './helpers/user';
 import {
+  createSheet,
   deleteSheet,
   isKeyValid,
   key,
@@ -65,8 +66,8 @@ const App: FC = () => {
     store.set({ ledger, party: { master, owner, foe } });
   }, [main]);
 
-  const hasSheetName = !!store.sheet.name;
-  const hasSheetOwner = !!store.sheet.owner;
+  const hasSheetName = !!store.ownerSheet.name;
+  const hasSheetOwner = !!store.ownerSheet.owner;
   const isLogged = !!store.owner;
 
   if (!ledger) return <Loading />;
@@ -99,8 +100,8 @@ const App: FC = () => {
               pure(ledger, pName)
                 .pipe(
                   findOrCreate,
-                  tap(console.log),
-                  // createSheet(master.identifier, partyName, sheet),
+                  rmap(p => p.identifier),
+                  createSheet(store.master, sheet),
                 )
                 .subscribe(console.log);
             }}
@@ -108,14 +109,17 @@ const App: FC = () => {
             Find new foe
           </Button>
 
-          <SheetPage />
+          <SheetPage sheet={store.foeSheet} />
+
+
+          <SheetPage sheet={store.ownerSheet} />
 
           <Button
             className="bg-red-600"
             onClick={() => {
               const skey = key(
                 party.master || '',
-                store.sheet.name || '',
+                store.ownerSheet.name || '',
                 party.owner || '',
               );
 
@@ -127,7 +131,7 @@ const App: FC = () => {
                   deleteSheet,
                   tap(console.log),
                   tap(() => {
-                    set({ sheet: {} });
+                    set({ ownerSheet  : {} });
                     window.location.replace('/');
                   }),
                 )
