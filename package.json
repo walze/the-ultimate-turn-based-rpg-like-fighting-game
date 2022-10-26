@@ -4,15 +4,15 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build": "concurrently --timings --kill-others 'pnpm:build:*'",
     "build:client": "vite build",
     "build:daml": "daml build",
-    "dev:serve": "ts-node-esm -P server/tsconfig.node.json ./server/index.ts",
-    "codegen": "daml build && daml codegen js",
+    "build:serve": "ts-node-esm -P server/tsconfig.node.json ./server/index.ts",
+    "codegen": "pnpm build && daml codegen js",
     "preview": "vite preview",
-    "dup": "pnpm codegen && docker compose up",
-    "start": "docker compose down && docker compose up -d && docker compose logs -f",
+    "start": "concurrently --kill-others 'pnpm:start:*'",
     "start:client": "vite",
-    "watch:serve": "nodemon server/index.ts"
+    "start:serve": "nodemon server/index.ts"
   },
   "dependencies": {
     "@daml.js/daml-project": "file:daml.js/daml-project-1.0.0",
