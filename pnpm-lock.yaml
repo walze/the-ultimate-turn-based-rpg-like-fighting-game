@@ -16,10 +16,11 @@ specifiers:
   '@types/body-parser': ^1.19.2
   '@types/cors': ^2.8.12
   '@types/express': ^4.17.14
+  '@types/js-cookie': ^3.0.2
   '@types/jsonwebtoken': ^8.5.9
   '@types/lodash': ^4.14.186
   '@types/node': ^18.11.5
-  '@types/react': ^18.0.22
+  '@types/react': ^18.0.23
   '@types/react-dom': ^18.0.7
   '@vitejs/plugin-react': ^2.1.0
   assert: ^2.0.0
@@ -31,6 +32,7 @@ specifiers:
   esbuild: ^0.15.12
   express: ^4.18.2
   https-proxy-agent: ^5.0.1
+  js-cookie: ^3.0.1
   jsonwebtoken: ^8.5.1
   lodash: ^4.17.21
   node-fetch: ^3.2.10
@@ -58,6 +60,7 @@ dependencies:
   '@heroicons/react': 2.0.12_react@18.2.0
   '@rollup/plugin-alias': 4.0.2
   '@tailwindcss/forms': 0.5.3_tailwindcss@3.2.1
+  '@types/js-cookie': 3.0.2
   '@types/lodash': 4.14.186
   assert: 2.0.0
   body-parser: 1.20.1
@@ -68,6 +71,7 @@ dependencies:
   esbuild: 0.15.12
   express: 4.18.2
   https-proxy-agent: 5.0.1
+  js-cookie: 3.0.1
   jsonwebtoken: 8.5.1
   lodash: 4.17.21
   node-fetch: 3.2.10
@@ -89,7 +93,7 @@ devDependencies:
   '@types/express': 4.17.14
   '@types/jsonwebtoken': 8.5.9
   '@types/node': 18.11.5
-  '@types/react': 18.0.22
+  '@types/react': 18.0.23
   '@types/react-dom': 18.0.7
   '@vitejs/plugin-react': 2.1.0_vite@3.1.8
   tailwindcss: 3.2.1_ts-node@10.9.1
@@ -603,6 +607,10 @@ packages:
       '@types/serve-static': 1.15.0
     dev: true
 
+  /@types/js-cookie/3.0.2:
+    resolution: {integrity: sha512-6+0ekgfusHftJNYpihfkMu8BWdeHs9EOJuGcSofErjstGPfPGEu9yTu4t460lTzzAMl2cM5zngQJqPMHbbnvYA==}
+    dev: false
+
   /@types/jsonwebtoken/8.5.9:
     resolution: {integrity: sha512-272FMnFGzAVMGtu9tkr29hRL6bZj4Zs1KZNeHLnKqAvp06tAIcarTMwOh8/8bz4FmKRcMxZhZNeUAQsNLoiPhg==}
     dependencies:
@@ -635,11 +643,11 @@ packages:
   /@types/react-dom/18.0.7:
     resolution: {integrity: sha512-HaXc+BbqAZE1RdsK3tC8SbkFy6UL2xF76lT9rQs5JkPrJg3rWA3Ou/Lhw3YJQzEDkBpmJ79nBsfnd05WrBd2QQ==}
     dependencies:
-      '@types/react': 18.0.22
+      '@types/react': 18.0.23
     dev: true
 
-  /@types/react/18.0.22:
-    resolution: {integrity: sha512-4yWc5PyCkZN8ke8K9rQHkTXxHIWHxLzzW6RI1kXVoepkD3vULpKzC2sDtAMKn78h92BRYuzf+7b/ms7ajE6hFw==}
+  /@types/react/18.0.23:
+    resolution: {integrity: sha512-R1wTULtCiJkudAN2DJGoYYySbGtOdzZyUWAACYinKdiQC8auxso4kLDUhQ7AJ2kh3F6A6z4v69U6tNY39hihVQ==}
     dependencies:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.2
@@ -1792,6 +1800,11 @@ packages:
       ws: '*'
     dependencies:
       ws: 7.5.9
+    dev: false
+
+  /js-cookie/3.0.1:
+    resolution: {integrity: sha512-+0rgsUXZu4ncpPxRL+lNEptWMOWl9etvPHc/koSRp6MPwpRYAhmk0dUG00J4bxVV3r9uUzfo24wW0knS07SKSw==}
+    engines: {node: '>=12'}
     dev: false
 
   /js-tokens/4.0.0:

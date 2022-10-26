@@ -1,10 +1,11 @@
-import { State, useStore } from '../helpers/store';
+import { useStore } from '../helpers/store';
 import Input from '../form/Input';
 import { FormEvent, useEffect } from 'react';
 import Button from '../form/Button';
+import coc from 'js-cookie';
 
 const submit =
-  (set: (s: Partial<State>) => void) =>
+  (set: (s: string) => void) =>
   (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -14,24 +15,28 @@ const submit =
     const party = formData.get('username') as string;
     if (!party) return;
 
-    set({ owner: party });
+    set(party);
   };
 
 export default () => {
   const { set } = useStore();
 
-  useEffect(() => {
-    const owner = new URL(window.location.href).searchParams.get(
-      'username',
-    );
+  const handleSubmit = (owner: string) => {
+    coc.set('owner', owner, { expires: 0.004 });
 
-    if (owner) set({ owner });
+    set({ owner });
+  };
+
+  useEffect(() => {
+    const owner = coc.get('owner');
+
+    if (owner) handleSubmit(owner);
   }, []);
 
   return (
     <form
       className="rounded-lg space-y-6"
-      onSubmit={submit(set)}
+      onSubmit={submit(handleSubmit)}
     >
       <h3 className="text-lg font-bold text-center leading-3 text-gray-900">
         Login

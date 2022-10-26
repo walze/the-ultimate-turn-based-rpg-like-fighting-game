@@ -2,19 +2,40 @@ import { useStore } from '../helpers/store';
 import Input from '../form/Input';
 import { useEffect } from 'react';
 import Button from '../form/Button';
+import cookie from 'js-cookie';
+import { Sheet } from '@daml.js/daml-project';
+import assert_id from '../helpers/assert_id';
+import { isKeyValid, key } from '../helpers/sheet';
 
 export default () => {
-  const { set, sheet } = useStore();
+  const { set, sheet, ledger, party } = useStore();
+  const skey = key(
+    party.master || '',
+    sheet.name || '',
+    party.owner || '',
+  );
+
+  const handleSubmit = (name: string) => {
+    cookie.set('sheet', name, { expires: 0.004 });
+
+    set({ sheet: { ...sheet, name } });
+  };
 
   useEffect(() => {
-    const name = new URL(window.location.href).searchParams.get(
-      'sheet',
-    );
+    const name = sheet.name || cookie.get('sheet');
+    if (!ledger || !isKeyValid(skey)) return;
 
-    if (name) {
-      set({ sheet: { ...sheet, name } });
-    }
-  }, []);
+    ledger
+      .fetchByKey(Sheet.Sheet, skey)
+      .then((s) => s?.payload)
+      .then(assert_id())
+      .then((sheet) => set({ sheet }))
+      .catch(() => {
+        console.warn('No sheet found for', name);
+
+        cookie.remove('sheet');
+      });
+  }, [ledger, sheet.name]);
 
   return (
     <form
@@ -28,7 +49,7 @@ export default () => {
         const name = formData.get('sheet') as string;
         if (!name) return;
 
-        set({ sheet: { ...sheet, name } });
+        handleSubmit(name);
       }}
     >
       <h3 className="text-lg font-bold text-center leading-3 text-gray-900">

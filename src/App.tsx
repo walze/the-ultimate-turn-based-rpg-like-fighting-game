@@ -26,8 +26,6 @@ import {
   key,
   randomSheetTemplate,
 } from './helpers/sheet';
-import { Sheet } from '@daml.js/daml-project';
-import assert_id from './helpers/assert_id';
 import SheetSelect from './component/SheetSelect';
 import slugify from 'slugify';
 import { TrashIcon } from '@heroicons/react/24/solid';
@@ -75,23 +73,11 @@ const App: FC = () => {
     store.set({ ledger, party: { master, owner, foe } });
   }, [main]);
 
-  useEffect(() => {
-    const name = store.sheet.name;
-    if (!ledger || !isKeyValid(skey)) return;
-
-    ledger
-      .fetchByKey(Sheet.Sheet, skey)
-      .then((s) => s?.payload)
-      .then(assert_id())
-      .then((sheet) => set({ sheet }))
-      .catch(() => console.warn('No sheet found for', name));
-  }, [ledger, store.sheet.name]);
-
   const hasSheetName = !!store.sheet.name;
   const hasSheetOwner = !!store.sheet.owner;
   const isLogged = !!store.owner;
 
-  if (!ledger || !party.master) return <Loading />;
+  if (!ledger) return <Loading />;
 
   return (
     <section className="p-4 container flex flex-col gap-4 sm:mx-auto sm:w-full sm:max-w-md">
