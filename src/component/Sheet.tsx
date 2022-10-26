@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import assert from '../helpers/assert_id';
 import { key } from '../helpers/sheet';
 import { useStore } from '../helpers/store';
+import Loading from './Loading';
 
 type StatProps = {
   name: string;
@@ -23,7 +24,7 @@ const Stat = ({ name, value }: StatProps) => (
 export default () => {
   const { sheet } = useStore();
 
-  if (!sheet) return <>Loading...</>;
+  if (!sheet.weapon) return <Loading label="sheet" />;
 
   const {
     name,
@@ -35,7 +36,9 @@ export default () => {
     <>
       <article className="w-full mx-auto max-w-lg overflow-hidden bg-white rounded-lg shadow-lg">
         <div className="flex items-center px-6 py-3 bg-gray-900">
-          <h2 className="text-lg font-bold text-white">{name}</h2>
+          <h2 className="text-lg font-bold text-white">
+            {name}
+          </h2>
         </div>
 
         <div className="px-6 py-4 pb-6">

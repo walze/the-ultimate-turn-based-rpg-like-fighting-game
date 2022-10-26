@@ -7,7 +7,7 @@ import CreateSheet from './component/CreateSheet';
 import Modal from './component/Modal';
 import SheetPage from './component/Sheet';
 import Button from './form/Button';
-import { from, map, mergeMap, of, pipe, toArray } from 'rxjs';
+import { concatMap, from, map, of, pipe, toArray } from 'rxjs';
 import { pair$, rbind, snd$ } from './helpers/BiFunctor$';
 import Ledger from '@daml/ledger';
 import Loading from './component/Loading';
@@ -15,12 +15,13 @@ import { findOrCreate } from './helpers/user';
 import { key } from './helpers/sheet';
 import { Sheet } from '@daml.js/daml-project';
 import assert_id from './helpers/assert_id';
+import SheetSelect from './component/SheetSelect';
 
 export const getMain = pipe(
   getLedger,
   rbind((ids: string[], l: Ledger) =>
     from(ids).pipe(
-      mergeMap((id) => findOrCreate(pair$(l, id))),
+      concatMap((id) => findOrCreate(pair$(l, id))),
       snd$,
       map((u) => u.identifier),
       toArray(),
@@ -55,9 +56,9 @@ const App: FC = () => {
   }, [main]);
 
   useEffect(() => {
-    if (!ledger || !party.master || !party.owner) return;
-
-    const name = 'nice';
+    const name = store.sheet.name;
+    if (!ledger || !party.master || !party.owner || !name)
+      return;
 
     const skey = key(party.master, name, party.owner);
 
@@ -67,9 +68,9 @@ const App: FC = () => {
       .then(assert_id())
       .then((sheet) => set({ sheet }))
       .catch(() => console.warn('No sheet found for', name));
-  }, [ledger]);
+  }, [ledger, store.sheet.name]);
 
-  const hasSheet = !!store.sheet;
+  const hasSheet = !!store.sheet.name;
   const isLogged = !!store.owner;
 
   if (!ledger || !party.master) return <Loading />;
@@ -79,6 +80,10 @@ const App: FC = () => {
       <h1 className="tracking-tight uppercase font-extrabold mt-6 text-center text-3xl text-gray-900">
         The Ultimate Turn-Based RPG Like Fighting Game
       </h1>
+
+      <Modal show={!store.sheet?.name}>
+        <SheetSelect />
+      </Modal>
 
       <Modal show={!isLogged}>
         <Login />

@@ -37,10 +37,7 @@ export default () => {
         Login
       </h3>
 
-      <Input
-        label="Username"
-        placeholder="A new challenger approaches..."
-      />
+      <Input label="Username" placeholder="your username" />
 
       <Button>Sign in</Button>
     </form>

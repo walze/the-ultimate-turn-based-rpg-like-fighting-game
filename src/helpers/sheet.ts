@@ -11,27 +11,22 @@ export const createSheet = (
   masterID: string,
   sheet: Partial<Sheet.Sheet>,
 ) =>
-  pipe(
-    bbind((l: Ledger, name: string) =>
-      of([l, name] as const).pipe(
-        findParty,
-        rmap(
-          (party) =>
-            ({
-              ...sheet,
-              master: masterID,
-              owner: party?.identifier,
-            } as Sheet.Sheet),
-        ),
-        acceptSheetCreate,
-        map((sheet) => [l, sheet]),
+  bbind((l: Ledger, name: string) =>
+    of([l, name] as const).pipe(
+      findParty,
+      rmap(
+        (party) =>
+          ({
+            ...sheet,
+            master: masterID,
+            owner: party?.identifier,
+          } as Sheet.Sheet),
       ),
+      acceptSheetCreate,
+      map((sheet) => [l, sheet]),
     ),
   );
 
-// getName().subscribe(console.log);
-// create sheet
-// implement choices
 export const randomSheetTemplate =
   async (): Promise<Sheet.Sheet> => {
     const current_foe = localStorage.getItem('current_foe');

@@ -1,5 +1,11 @@
 {
-  "exclude": ["node_modules", "dist", "daml.js"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "daml.js",
+    "postcss.config.cjs",
+    "tailwind.config.cjs"
+  ],
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig to read more about this file */
 
@@ -35,9 +41,7 @@
     "baseUrl": "./" /* Specify the base directory to resolve non-relative module names. */,
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
     // "typeRoots": [],                                  /* Specify multiple folders that act like './node_modules/@types'. */
-    "types": [
-      "./src"
-    ] /* Specify type package names to be included without being referenced in a source file. */,
+    // "types": [    ] /* Specify type package names to be included without being referenced in a source file. */,
     "allowUmdGlobalAccess": true /* Allow accessing UMD globals from modules. */,
     // "moduleSuffixes": [],                             /* List of file name suffixes to search when resolving a module. */
     "resolveJsonModule": true /* Enable importing .json files. */,
