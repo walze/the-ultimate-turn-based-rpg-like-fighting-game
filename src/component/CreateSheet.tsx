@@ -32,7 +32,8 @@ const formatSheet = (e: FormEvent<HTMLFormElement>) => {
 };
 
 export default () => {
-  const { master, owner, ledger } = useStore();
+  const { party, ledger } = useStore();
+  const { master, owner } = party;
 
   return (
     <form
@@ -41,17 +42,14 @@ export default () => {
         const sheet = formatSheet(e);
         if (!master || !owner || !ledger) return;
 
-        of([ledger, owner.identifier] as const)
-          .pipe(createSheet(master.identifier, sheet))
+        of([ledger, owner] as const)
+          .pipe(createSheet(master, sheet))
           .subscribe(console.warn);
       }}
     >
       <Input label="Name" placeholder="Character name" />
 
-      <Select
-        name="weapon"
-        list={WEAPONS.map((w) => w.name)}
-      />
+      <Select name="weapon" list={WEAPONS.map((w) => w.name)} />
 
       <button
         type="submit"

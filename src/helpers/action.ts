@@ -7,12 +7,12 @@ export const acceptSheetCreate = pipe(
   rbind((sheet: Sheet.Sheet, l: Ledger) =>
     l.create(CharAction.CharAction, { sheet }),
   ),
+  rbind((a, l) =>
+    l.exercise(
+      CharAction.CharAction.Create_Accept,
+      a.contractId,
+      {},
+    ),
+  ),
   tap(console.log),
-  // rbind((a, l) =>
-  //   l.exercise(
-  //     CharAction.CharAction.Create_Accept,
-  //     a.contractId,
-  //     {},
-  //   ),
-  // ),
 );
