@@ -7,89 +7,72 @@ import CreateSheet from './component/CreateSheet';
 import Modal from './component/Modal';
 import SheetPage from './component/Sheet';
 import Button from './form/Button';
-import {
-  from,
-  map,
-  mergeAll,
-  mergeMap,
-  Observable,
-  of,
-  pipe,
-  tap,
-  toArray,
-} from 'rxjs';
-import { rbind } from './helpers/BiFunctor$';
-import Ledger, { User } from '@daml/ledger';
+import { from, map, mergeMap, of, pipe, toArray } from 'rxjs';
+import { pair$, rbind, snd$ } from './helpers/BiFunctor$';
+import Ledger from '@daml/ledger';
 import Loading from './component/Loading';
-import { createUser } from './helpers/user';
-
-const matchUsers = (l: Ledger, ids: string[]) =>
-  pipe(
-    mergeMap((users: User[]) =>
-      ids.map((id) => {
-        const user = users.find((u) =>
-          u.primaryParty?.includes(id),
-        );
-
-        return user?.primaryParty
-          ? of(user.primaryParty)
-          : of([l, id] as const).pipe(
-              createUser(),
-              map((ab) => ab[1]),
-            );
-      }),
-    ),
-    mergeAll(),
-    toArray(),
-  );
+import { findOrCreate } from './helpers/user';
+import { key } from './helpers/sheet';
+import { Sheet } from '@daml.js/daml-project';
+import assert_id from './helpers/assert_id';
 
 export const getMain = pipe(
   getLedger,
   rbind((ids: string[], l: Ledger) =>
-    from(l.listUsers()).pipe(matchUsers(l, ids)),
+    from(ids).pipe(
+      mergeMap((id) => findOrCreate(pair$(l, id))),
+      snd$,
+      map((u) => u.identifier),
+      toArray(),
+    ),
   ),
+  snd$,
+  getLedger,
 );
 
 const App: FC = () => {
   const store = useStore();
-  const { ledger } = store;
 
   const uNames = [store.master, store.owner, store.foe];
+  const { ledger, party, set } = store;
 
   const main$ = useMemo(
     () => of(uNames.filter(Boolean) as string[]).pipe(getMain),
     uNames,
   );
+
   const main = use$(main$) || [];
 
-  const isLogged = !!store.owner;
+  console.log(store);
 
   useEffect(() => {
     const [ledger, parties] = main;
     if (!ledger || !parties) return;
 
-    ledger.getUser('master').then(console.log);
+    const [master, owner, foe] = parties;
 
-    store.set({ ledger, parties });
+    store.set({ ledger, party: { master, owner, foe } });
   }, [main]);
 
-  // useEffect(() => {
-  //   if (!ledger || !owner || !master) return;
+  useEffect(() => {
+    if (!ledger || !party.master || !party.owner) return;
 
-  //   const name = 'nice';
-  //   const skey = key(master, name, owner.identifier);
+    const name = 'nice';
 
-  //   ledger
-  //     .fetchByKey(Sheet.Sheet, skey)
-  //     .then((s) => s?.payload)
-  //     .then(assertid())
-  //     .then((sheet) => set({ sheet }))
-  //     .catch(() => console.warn('No sheet found for', name));
-  // }, [ledger, owner, master]);
+    const skey = key(party.master, name, party.owner);
 
-  if (!ledger) return <Loading />;
+    ledger
+      .fetchByKey(Sheet.Sheet, skey)
+      .then((s) => s?.payload)
+      .then(assert_id())
+      .then((sheet) => set({ sheet }))
+      .catch(() => console.warn('No sheet found for', name));
+  }, [ledger]);
 
   const hasSheet = !!store.sheet;
+  const isLogged = !!store.owner;
+
+  if (!ledger || !party.master) return <Loading />;
 
   return (
     <section className="p-4 container flex flex-col gap-4 sm:mx-auto sm:w-full sm:max-w-md">

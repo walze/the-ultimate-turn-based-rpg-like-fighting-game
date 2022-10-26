@@ -1,5 +1,5 @@
 import { Sheet } from '@daml.js/daml-project';
-import Ledger, { PartyInfo, User } from '@daml/ledger';
+import Ledger from '@daml/ledger';
 import create from 'zustand';
 
 export enum Parties {
@@ -8,18 +8,16 @@ export enum Parties {
   foe,
 }
 
-type getParty = (
-  party: keyof typeof Parties,
-) => User | undefined;
+type Party = keyof typeof Parties;
 
 export interface State {
-  parties: User[];
+  party: {
+    [key in Party]: string | undefined;
+  };
 
   master: string;
   owner?: string;
   foe?: string;
-
-  party: getParty;
 
   ledger?: Ledger;
   sheet?: Sheet.Sheet;
@@ -30,17 +28,13 @@ export interface State {
 const DEFAULT_MASTER = 'master';
 
 export const useStore = create<State>((set) => ({
-  parties: [],
-  master: DEFAULT_MASTER,
-
-  party(p) {
-    const party = this[p];
-    if (!party) return undefined;
-
-    return this.parties.find((p) =>
-      p.primaryParty!.includes(party),
-    );
+  party: {
+    foe: undefined,
+    master: undefined,
+    owner: undefined,
   },
+
+  master: DEFAULT_MASTER,
 
   set,
 }));

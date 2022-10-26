@@ -1,16 +1,16 @@
 import Ledger, {
-  User,
   UserRight,
   UserRightHelper,
 } from '@daml/ledger';
 import assert from 'assert';
-import { map, of, pipe } from 'rxjs';
-import { rbind, rmap } from './BiFunctor$';
+import { of, pipe } from 'rxjs';
+import { pair$, rbind, rmap, snd$ } from './BiFunctor$';
 
 const r = /^[a-z0-9@^$.!`\-#+'~_|:]{1,128}$/;
 
 export const createUser = (rights?: UserRight[]) =>
   rmap((name: string, l: Ledger) => {
+    assert(!!name, `Name cannot be falsy: ${name}`);
     assert(r.test(name), `Invalid user name: ${name}`);
 
     l.createUser(
@@ -26,16 +26,11 @@ export const createUser = (rights?: UserRight[]) =>
   });
 
 export const allocParty = pipe(
-  rbind((u: User, l: Ledger) =>
+  rbind((p: string, l: Ledger) =>
     l
       .allocateParty({
-        displayName: u.userId,
-        identifierHint: u.userId,
-      })
-      .then((p) => {
-        u.primaryParty = p.identifier;
-
-        return u;
+        displayName: p,
+        identifierHint: p,
       })
       .catch((e) => {
         console.warn(e);
@@ -47,14 +42,31 @@ export const allocParty = pipe(
 
 export const findUser = pipe(
   rbind((id: string, l: Ledger) =>
-    l.getUser(id).catch(() => null),
+    l
+      .listUsers()
+      .then((users) => users.find((u) => u.userId.includes(id))),
   ),
-  rbind((u, l) => {
-    if (u?.primaryParty || !u) return of(u);
+);
 
-    return of([l, u] as const).pipe(
-      allocParty,
-      map((a) => a[1]),
-    );
-  }),
+export const findParty = pipe(
+  rbind((id: string, l: Ledger) =>
+    l
+      .listKnownParties()
+      .then((users) =>
+        users.find((u) => u.identifier.includes(id)),
+      ),
+  ),
+);
+
+export const findOrCreate = rbind((p: string, l: Ledger) =>
+  of([l, p] as const).pipe(
+    findParty,
+    rbind((u) => (u ? pair$(l, u) : allocParty(pair$(l, p)))),
+    rmap(([, p]) => {
+      assert(p, `Failed to allocate party: ${p}`);
+
+      return p;
+    }),
+    snd$,
+  ),
 );

@@ -1,3 +1,4 @@
+import assert_id from './assert_id';
 import { useState, useEffect, useMemo } from 'react';
 import {
   catchError,
@@ -6,13 +7,12 @@ import {
   of,
   OperatorFunction,
 } from 'rxjs';
-import assert_id from './assert_id';
 
 const use$ = <T>($: Observable<T>) => {
-  const [s, setS] = useState<T | null>(null);
+  const [s, ss] = useState<T | null>(null);
 
   useEffect(() => {
-    const sub = $?.subscribe(setS);
+    const sub = $?.subscribe(ss);
 
     return () => sub?.unsubscribe();
   }, [$]);

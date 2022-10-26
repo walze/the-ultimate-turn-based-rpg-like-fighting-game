@@ -22,6 +22,8 @@ app.listen(3000, () => {
   );
 });
 
+const wait = (t = 500) => new Promise((r) => setTimeout(r, t));
+
 app.post('/token', (req, res) => {
   console.log('------------------------');
   console.log(req.body);
@@ -31,7 +33,7 @@ app.post('/token', (req, res) => {
 
   res.write('');
 
-  setTimeout(() => {
+  return wait().then(() => {
     res.end(sign(req.body, SECRET));
-  }, 500);
+  });
 });
