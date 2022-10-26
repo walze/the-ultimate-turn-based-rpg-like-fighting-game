@@ -1,6 +1,6 @@
 import { CharAction, Sheet } from '@daml.js/daml-project';
 import Ledger from '@daml/ledger';
-import { pipe, tap } from 'rxjs';
+import { pipe } from 'rxjs';
 import { rbind } from './BiFunctor$';
 
 export const acceptSheetCreate = pipe(
@@ -14,5 +14,4 @@ export const acceptSheetCreate = pipe(
       {},
     ),
   ),
-  tap(console.log),
 );

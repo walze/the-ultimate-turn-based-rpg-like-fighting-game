@@ -5,6 +5,7 @@ import { WEAPONS, BASE_HEALTH } from '../config';
 import Input from '../form/Input';
 import Select from '../form/Select';
 import { createSheet } from '../helpers/sheet';
+import { snd$ } from '../helpers/BiFunctor$';
 
 const formatSheet = (e: FormEvent<HTMLFormElement>) => {
   const { currentTarget: f } = e;
@@ -32,7 +33,7 @@ const formatSheet = (e: FormEvent<HTMLFormElement>) => {
 };
 
 export default () => {
-  const { party, ledger } = useStore();
+  const { party, ledger, set } = useStore();
   const { master, owner } = party;
 
   return (
@@ -43,8 +44,8 @@ export default () => {
         if (!master || !owner || !ledger) return;
 
         of([ledger, owner] as const)
-          .pipe(createSheet(master, sheet))
-          .subscribe(console.warn);
+          .pipe(createSheet(master, sheet), snd$)
+          .subscribe((sheet) => set({ sheet }));
       }}
     >
       <Input

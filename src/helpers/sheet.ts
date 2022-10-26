@@ -1,9 +1,9 @@
 import { Sheet } from '@daml.js/daml-project';
-import Ledger from '@daml/ledger';
+import Ledger, { Event } from '@daml/ledger';
 import { of, map, lastValueFrom } from 'rxjs';
 import { BASE_HEALTH, WEAPONS } from '../config';
 import { acceptSheetCreate } from './action';
-import { bbind, rbind, rmap } from './BiFunctor$';
+import { rbind, rmap, snd$ } from './BiFunctor$';
 import { getName } from './name-api';
 import { findParty } from './user';
 
@@ -11,7 +11,7 @@ export const createSheet = (
   masterID: string,
   sheet: Partial<Sheet.Sheet>,
 ) =>
-  bbind((l: Ledger, name: string) =>
+  rbind((name: string, l: Ledger) =>
     of([l, name] as const).pipe(
       findParty,
       rmap(
@@ -23,7 +23,16 @@ export const createSheet = (
           } as Sheet.Sheet),
       ),
       acceptSheetCreate,
-      map((sheet) => [l, sheet]),
+      snd$,
+      snd$,
+      map(
+        (sheet) =>
+          sheet[1] as Extract<
+            Event<Sheet.Sheet>,
+            { created: unknown }
+          >,
+      ),
+      map((a) => a.created.payload),
     ),
   );
 
