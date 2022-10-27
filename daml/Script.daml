@@ -6,20 +6,21 @@ import Weapon
 import Sheet
 import CharAction
 
+setup : Script ()
 setup = script do
   [master, wallace, goblin] <- sequence $ party <$> ["master", "wallace", "goblin"]
 
-  let wallaceSheet = Sheet "Baracus Rex" 100 sword wallace master
-  let goblinSheet = Sheet "Generic Goblin" 20 dagger goblin master
+  let wallaceSheet = Sheet "Baracus Rex" 100 dagger wallace master Attack
+  let goblinSheet = Sheet "Generic Goblin" 30 sword goblin master Attack
+
+  gac <- submit master $ createCmd $ goblinSheet
 
   wac <- submit wallace $ createCmd $ CharAction wallaceSheet
-
   idw <- submit master
     $ exerciseCmd wac
     $ Create_Accept
 
   wac <- submit wallace $ createCmd $ CharAction wallaceSheet
-  gac <- submit master $ createCmd $ goblinSheet
 
   submit master
     $ exerciseCmd wac

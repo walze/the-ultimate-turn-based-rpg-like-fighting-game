@@ -6,12 +6,18 @@ type Target = (Text, Party)
 type Key = (Party, Target)
 type SheetID = ContractId Sheet
 
+data Stance = Attack | Defence
+  deriving (Eq, Show)
+
+base_health = 8
+
 template Sheet with
     name: Text
     hp: Int
     weapon: Weapon
     owner: Party
     master: Party
+    stance: Stance
   where
     ensure name /= ""
     signatory master
@@ -20,6 +26,7 @@ template Sheet with
     maintainer fst key
 
     let
+      totalHP = base_health * weapon.ad
       isAlive = hp > 0
 
     choice Suffer : SheetID
@@ -27,6 +34,11 @@ template Sheet with
             damage: Int
         controller master
         do
+            assertMsg "Cannot suffer negative damage" $ damage >= 0
+
             create this with
-                hp = hp - damage
+                hp = case stance of
+                    -- completely arbitrary damage addition
+                    Attack -> hp - (damage + damage * (20 / weapon.ad))
+                    Defence -> hp - damage
 
