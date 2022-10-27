@@ -19,11 +19,21 @@
   "features": {
     "ghcr.io/devcontainers/features/node:1": {
       "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/docker-in-docker:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/docker-from-docker:1": {
+      "version": "latest"
     }
   },
 
+  "settings": {
+    "terminal.integrated.defaultProfile.linux": "bash"
+  },
+
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  // "forwardPorts": [],
+  "forwardPorts": [5173, 3000],
 
   // Uncomment the next line if you want start specific services in your Docker Compose config.
   // "runServices": [],

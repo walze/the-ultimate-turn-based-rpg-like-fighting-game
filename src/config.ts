@@ -1,5 +1,5 @@
 import { Weapon } from '@daml.js/daml-project';
-import { mergeMap, of } from 'rxjs';
+import { mergeMap} from 'rxjs';
 import { fromFetch } from 'rxjs/fetch';
 
 const domain = process.env['DOMAIN'] ?? 'localhost';
