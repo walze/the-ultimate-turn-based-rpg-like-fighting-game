@@ -23,13 +23,13 @@ const Stat = ({ children: [icon, stat, value] }: StatProps) => (
 );
 
 type Props = {
-  sheet: Partial<DSheet.Sheet>;
+  sheet?: DSheet.Sheet;
 };
 
 const Sheet = (props: Props) => {
   const { sheet } = props;
 
-  if (!sheet.weapon) return <Loading label="sheet" />;
+  if (!sheet) return <Loading label="sheet" />;
 
   const {
     name,

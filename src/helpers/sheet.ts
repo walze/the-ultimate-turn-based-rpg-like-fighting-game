@@ -52,10 +52,11 @@ export const randomSheetTemplate =
     const weapon =
       WEAPONS[Math.floor(Math.random() * WEAPONS.length)]!;
 
-    const r = {
+    const r: SheetCreate = {
       name,
       weapon,
       hp: BASE_HEALTH * +weapon.ad + '',
+      stance: 'Defence',
     };
 
     localStorage.setItem('current_foe', JSON.stringify(r));

@@ -28,7 +28,7 @@ const formatSheet = (e: FormEvent<HTMLFormElement>) => {
     name,
     weapon: weapon,
     hp: BASE_HEALTH * +weapon.ad + '',
-    stance: 'Attack',
+    stance: 'Defence',
   };
 
   return sheet;

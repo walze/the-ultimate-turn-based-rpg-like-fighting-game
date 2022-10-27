@@ -12,12 +12,13 @@ const SheetSelect = () => {
 
   const handleSubmit = (name: string) => {
     cookie.set('sheet', name, { expires: 0.004 });
+    const os = { ...ownerSheet, name } as typeof ownerSheet;
 
-    set({ ownerSheet: { ...ownerSheet, name } });
+    set({ ownerSheet: os });
   };
 
   useEffect(() => {
-    const name = ownerSheet.name || cookie.get('sheet') || '';
+    const name = ownerSheet?.name || cookie.get('sheet') || '';
     const skey = key(
       party.master || '',
       name,
@@ -36,7 +37,7 @@ const SheetSelect = () => {
 
         cookie.remove('sheet');
       });
-  }, [ledger, ownerSheet.name]);
+  }, [ledger, ownerSheet?.name]);
 
   return (
     <form
