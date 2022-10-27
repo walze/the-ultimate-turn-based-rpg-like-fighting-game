@@ -12,7 +12,7 @@ type Log$ = typeof log$;
 type Css = typeof css;
 
 declare module '@daml/ledger' {
-  export interface User {
+  export interface User extends U {
     primaryParty: Party;
   }
 

@@ -7,7 +7,7 @@ import { Sheet } from '@daml.js/daml-project';
 import assert_id from '../helpers/assert_id';
 import { isKeyValid, key } from '../helpers/sheet';
 
-export default () => {
+const SheetSelect = () => {
   const { set, ownerSheet, ledger, party } = useStore();
 
   const handleSubmit = (name: string) => {
@@ -58,6 +58,7 @@ export default () => {
       </h3>
 
       <Input
+        autoComplete="off"
         autoFocus
         label="Your character's name"
         name="sheet"
@@ -72,3 +73,5 @@ export default () => {
     </form>
   );
 };
+
+export default SheetSelect;

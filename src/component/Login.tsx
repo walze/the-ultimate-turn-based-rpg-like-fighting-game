@@ -18,7 +18,7 @@ const submit =
     set(party);
   };
 
-export default () => {
+const Login = () => {
   const { set } = useStore();
 
   const handleSubmit = (owner: string) => {
@@ -43,6 +43,7 @@ export default () => {
       </h3>
 
       <Input
+        autoComplete="off"
         autoFocus
         label="Username"
         placeholder="your username"
@@ -52,3 +53,5 @@ export default () => {
     </form>
   );
 };
+
+export default Login;

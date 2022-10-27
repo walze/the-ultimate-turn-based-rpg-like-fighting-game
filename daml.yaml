@@ -5,7 +5,7 @@ sdk-version: 2.4.0
 name: daml-project
 source: daml
 init-script: Script:setup
-start-navigator: true
+start-navigator: false
 parties:
   - master
   - wallace

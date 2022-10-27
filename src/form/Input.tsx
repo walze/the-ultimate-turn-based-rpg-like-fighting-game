@@ -6,7 +6,7 @@ type Props = {
   name?: string;
 } & InputHTMLAttributes<HTMLInputElement>;
 
-export default ({
+const Input = ({
   label,
   placeholder,
   name,
@@ -34,3 +34,5 @@ export default ({
     </div>
   );
 };
+
+export default Input;

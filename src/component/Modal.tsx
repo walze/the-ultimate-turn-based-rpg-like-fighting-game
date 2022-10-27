@@ -6,9 +6,9 @@ type Props = PropsWithChildren<{
   onClose?: () => void;
 }>;
 
-export default ({
+const Modal = ({
   show,
-  onClose = () => {},
+  onClose = () => void 0,
   children,
 }: Props) => {
   return (
@@ -44,3 +44,5 @@ export default ({
     </Transition.Root>
   );
 };
+
+export default Modal;

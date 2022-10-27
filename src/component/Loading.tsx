@@ -1,4 +1,4 @@
-export default ({ label }: { label?: string }) => (
+const Loading = ({ label }: { label?: string }) => (
   <div
     data-label={label}
     className="my-20 flex justify-center items-center"
@@ -11,3 +11,5 @@ export default ({ label }: { label?: string }) => (
     </div>
   </div>
 );
+
+export default Loading;

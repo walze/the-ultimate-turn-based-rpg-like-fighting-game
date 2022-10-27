@@ -3,25 +3,26 @@ import Ledger, { Event } from '@daml/ledger';
 import { of, map, lastValueFrom } from 'rxjs';
 import { BASE_HEALTH, WEAPONS } from '../config';
 import { acceptSheetCreate } from './action';
+import assert_id from './assert_id';
 import { rbind, rmap, snd$ } from './BiFunctor$';
 import { getName } from './name-api';
 import { findParty } from './user';
 
+export type SheetCreate = Omit<Sheet.Sheet, 'owner' | 'master'>;
+
 export const createSheet = (
   masterID: string,
-  sheet: Partial<Sheet.Sheet>,
+  sheet: SheetCreate,
 ) =>
   rbind((name: string, l: Ledger) =>
     of([l, name] as const).pipe(
       findParty,
-      rmap(
-        (party) =>
-          ({
-            ...sheet,
-            master: masterID,
-            owner: party?.identifier,
-          } as Sheet.Sheet),
-      ),
+      rmap(assert_id('party not find')),
+      rmap((party) => ({
+        ...sheet,
+        master: masterID,
+        owner: party.identifier,
+      })),
       acceptSheetCreate,
       snd$,
       snd$,

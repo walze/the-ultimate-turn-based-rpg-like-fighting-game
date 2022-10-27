@@ -10,12 +10,17 @@ type Props = {
   name: string;
 };
 
-export default ({ list, name }: Props) => {
+const Select = ({ list, name }: Props) => {
   const [selected, setSelected] = useState(list[0]);
 
   return (
     <fieldset className="border rounded-lg border-gray-200">
-      <input type="hidden" id={name} name={name} value={selected} />
+      <input
+        type="hidden"
+        id={name}
+        name={name}
+        value={selected}
+      />
 
       <Listbox value={selected} onChange={setSelected}>
         <div className="relative mt-1">
@@ -61,7 +66,9 @@ export default ({ list, name }: Props) => {
                     <>
                       <span
                         className={`block truncate ${
-                          selected ? 'font-medium' : 'font-normal'
+                          selected
+                            ? 'font-medium'
+                            : 'font-normal'
                         }`}
                       >
                         {item}
@@ -86,3 +93,5 @@ export default ({ list, name }: Props) => {
     </fieldset>
   );
 };
+
+export default Select;

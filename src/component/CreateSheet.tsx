@@ -4,7 +4,7 @@ import { useStore } from '../helpers/store';
 import { WEAPONS, BASE_HEALTH } from '../config';
 import Input from '../form/Input';
 import Select from '../form/Select';
-import { createSheet } from '../helpers/sheet';
+import { createSheet, SheetCreate } from '../helpers/sheet';
 import { snd$ } from '../helpers/BiFunctor$';
 
 const formatSheet = (e: FormEvent<HTMLFormElement>) => {
@@ -16,23 +16,25 @@ const formatSheet = (e: FormEvent<HTMLFormElement>) => {
   const inputs = Object.fromEntries(
     ar.filter((e) => e.name).map((e) => [e.name, e.value]),
   );
+  const name = inputs['name'];
 
   const weapon = WEAPONS.find(
     (w) => w.name === inputs['weapon'],
   );
-  if (!weapon) return;
 
-  // @ts-ignore
-  const sheet: Partial<Sheet.Sheet> = {
-    name: inputs['name'],
+  if (!weapon || !name) return;
+
+  const sheet: SheetCreate = {
+    name,
     weapon: weapon,
     hp: BASE_HEALTH * +weapon.ad + '',
+    stance: 'Attack',
   };
 
   return sheet;
 };
 
-export default () => {
+const CreateSheet = () => {
   const { party, ledger, set } = useStore();
   const { master, owner } = party;
 
@@ -41,7 +43,7 @@ export default () => {
       className="[&>*]:mb-4"
       onSubmit={(e) => {
         const sheet = formatSheet(e);
-        if (!master || !owner || !ledger) return;
+        if (!master || !owner || !ledger || !sheet) return;
 
         of([ledger, owner] as const)
           .pipe(createSheet(master, sheet), snd$)
@@ -65,3 +67,5 @@ export default () => {
     </form>
   );
 };
+
+export default CreateSheet;

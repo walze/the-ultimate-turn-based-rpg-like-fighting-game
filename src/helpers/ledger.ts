@@ -5,7 +5,7 @@ import { lbind, lmap, pair } from './BiFunctor$';
 
 const host = window.location.host;
 
-export const _ledger = (token: string = '') =>
+export const _ledger = (token = '') =>
   new Ledger({
     token,
     wsBaseUrl: `ws://${host}/ws/`,

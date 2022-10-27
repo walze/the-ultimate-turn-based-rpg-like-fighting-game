@@ -1,10 +1,10 @@
 import { useRef, useEffect } from 'react';
 
-type Object = { [key: string]: unknown };
+type OBJ = { [key: string]: unknown };
 
 // Hook
-const useWhyChanged = (props: Object) => {
-  const previousProps = useRef<Object>(props);
+const useWhyChanged = (props: OBJ) => {
+  const previousProps = useRef<OBJ>(props);
 
   const merged = {
     ...previousProps.current,

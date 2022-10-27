@@ -13,6 +13,7 @@
     "preview": "vite preview",
     "start": "concurrently --kill-others 'pnpm:start:*'",
     "start:client": "vite",
+    "test:lint": "eslint --ext .ts,.tsx,.js,.jsx .",
     "start:server": "nodemon server/index.ts"
   },
   "config": {
@@ -40,8 +41,8 @@
     "@types/jsonwebtoken": "^8.5.9",
     "@types/lodash": "^4.14.186",
     "@types/node": "^18.11.7",
-    "@types/react": "^18.0.23",
-    "@types/react-dom": "^18.0.7",
+    "@types/react": "^18.0.24",
+    "@types/react-dom": "^18.0.8",
     "@vitejs/plugin-react": "^2.2.0",
     "assert": "^2.0.0",
     "body-parser": "^1.20.1",
