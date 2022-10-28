@@ -1,8 +1,10 @@
+tsc
 dist
 /.daml
 /log
 navigator.log
 daml.js
+.tsbuildinfo
 
 node_modules
 .DS_Store

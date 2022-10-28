@@ -1,14 +1,7 @@
 {
-  "exclude": [
-    "node_modules",
-    "dist",
-    "daml.js",
-    "postcss.config.cjs",
-    "tailwind.config.cjs"
-  ],
   "include": [
-    "src/**/*",
-    "server/**/*",
+    "src",
+    "server"
   ],
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig to read more about this file */

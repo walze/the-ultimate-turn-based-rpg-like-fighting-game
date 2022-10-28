@@ -5,17 +5,18 @@
   "type": "module",
   "scripts": {
     "build": "concurrently --timings --kill-others 'pnpm:build:*'",
-    "build:client": "vite build",
+    "build:client": "vite --force build",
     "build:daml": "daml build",
     "build:server": "tsc -P server/tsconfig.node.json",
-    "codegen": "daml build && daml codegen js && pnpm install ./daml.js/daml-project-1.0.0",
+    "codegen": "daml codegen js",
+    "dev": "concurrently --kill-others 'pnpm:dev:*'",
+    "dev:client": "vite --force",
+    "dev:server": "pnpm build:server && nodemon tsc/index.js",
     "logs": "docker compose logs -f",
     "preview": "vite preview",
-    "start": "concurrently --kill-others 'pnpm:start:*'",
-    "start:client": "vite",
-    "test:lint": "eslint --ext .ts,.tsx,.js,.jsx .",
     "start:server": "pm2-runtime tsc/index.js",
-    "dev:server": "pnpm build:server && nodemon tsc/index.js"
+    "test:lint": "eslint --ext .ts,.tsx,.js,.jsx server src",
+    "prepare": "husky install"
   },
   "config": {
     "commitizen": {
@@ -24,7 +25,6 @@
   },
   "dependencies": {
     "@daml.js/daml-project": "file:daml.js/daml-project-1.0.0",
-    "@daml.js/daml-project-1.0.0": "link:daml.js/daml-project-1.0.0",
     "@daml/ledger": "latest",
     "@daml/types": "latest",
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
@@ -60,6 +60,7 @@
     "eslint-plugin-react": "^7.31.10",
     "express": "^4.18.2",
     "https-proxy-agent": "^5.0.1",
+    "husky": "^8.0.1",
     "js-cookie": "^3.0.1",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",

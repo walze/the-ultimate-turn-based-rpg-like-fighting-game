@@ -55,7 +55,6 @@ const App: FC = () => {
         UserRightHelper.canActAs(foe),
         UserRightHelper.canReadAs(foe),
       ])
-      .then(console.warn)
       .catch(console.error);
   }, [ledger, parties]);
 

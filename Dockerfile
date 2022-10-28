@@ -22,7 +22,7 @@ WORKDIR /app
 
 EXPOSE 3000
 
-CMD ["pnpm", "start:server"]
+CMD ["pnpm", "dev:server"]
 
 #### --- CLIENT --- ####
 FROM install AS client
@@ -31,4 +31,4 @@ WORKDIR /app
 
 EXPOSE 5173
 
-CMD ["pnpm", "start:client"]
+CMD ["pnpm", "dev:client"]

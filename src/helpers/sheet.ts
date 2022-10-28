@@ -1,11 +1,12 @@
 import {Sheet} from '@daml.js/daml-project';
-import type {Event} from '@daml/ledger';
 import type Ledger from '@daml/ledger';
-import {of, map, lastValueFrom} from 'rxjs';
+import {ContractId} from '@daml/types';
+import {of, lastValueFrom} from 'rxjs';
 import {ROLES} from '../config';
 import {acceptSheetCreate} from './action';
 import assert_id from './assert_id';
-import {rbind, rmap, snd$} from './BiFunctor$';
+import {rbind, rmap} from './BiFunctor$';
+import {extractExertion} from './extractExertion';
 import {getName} from './name-api';
 import {findParty} from './user';
 
@@ -25,16 +26,7 @@ export const createSheet = (
         owner: party.identifier,
       })),
       acceptSheetCreate,
-      snd$,
-      snd$,
-      map(
-        (sheet) =>
-          sheet[1] as Extract<
-            Event<Sheet.Sheet>,
-            {created: unknown}
-          >,
-      ),
-      map((a) => a.created.payload),
+      extractExertion,
     ),
   );
 
@@ -80,3 +72,11 @@ export const key = (
 // check they are all string and not empty
 export const isKeyValid = (key: Sheet.Sheet.Key) =>
   key._1 && key._2._1 && key._2._2;
+
+export const changeStance = (action: Sheet.Stance) =>
+  rbind(
+    (cid: ContractId<Sheet.Sheet>, l: Ledger) =>
+      l.exercise(Sheet.Sheet.ChangeStance, cid, {
+        action,
+      }) as ExerciseFixer<Sheet.Sheet>,
+  );
