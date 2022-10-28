@@ -15,6 +15,8 @@ export interface State {
     [key in Party]: string | undefined;
   };
 
+  turn: 'owner' | 'foe';
+
   master: string;
   owner?: string;
   foe?: string;
@@ -35,6 +37,8 @@ export const useStore = create<State>((set) => ({
     master: undefined,
     owner: undefined,
   },
+
+  turn: 'owner',
 
   master: DEFAULT_MASTER,
 
