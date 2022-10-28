@@ -27,7 +27,7 @@ jobs:
 
       - name: Install Daml SDK
         run: |
-          curl -sSL https://get.daml.com/ | sh -s -- -y
+          curl -sSL https://raw.githubusercontent.com/digital-asset/daml/main/daml-assistant/get-daml.sh | sh -- -y
           echo "$HOME/.daml/bin" >> $GITHUB_PATH
 
       - name: Build daml
