@@ -27,6 +27,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@main
 
+      - uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+
+      - name: Install Daml SDK
+        run: |
+          curl -sSL https://get.daml.com/ | sh -s -- -y
+          echo "$HOME/.daml/bin" >> $GITHUB_PATH
+
+      - name: Build daml
+        run: |
+          daml build && daml codegen js
+
       - uses: pnpm/action-setup@master
         name: Setup PNPM
         with:
