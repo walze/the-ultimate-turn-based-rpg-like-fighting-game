@@ -34,7 +34,7 @@ const Sheet = (props: Props) => {
   const {
     name,
     hp,
-    weapon: {ad, name: wname},
+    role: {ad, weapon},
     stance,
   } = sheet;
 
@@ -55,7 +55,7 @@ const Sheet = (props: Props) => {
           <Stat>
             <EyeDropperIcon className="w-4 h-4 mr-1" />
             Weapon
-            {wname}
+            {weapon}
           </Stat>
 
           <Stat>

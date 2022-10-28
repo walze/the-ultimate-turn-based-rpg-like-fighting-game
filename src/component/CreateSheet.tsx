@@ -33,7 +33,7 @@ const formatSheet = (e: FormEvent<HTMLFormElement>) => {
 };
 
 const CreateSheet = () => {
-  const {party, ledger} = useStore();
+  const {party, ledger, set} = useStore();
   const {master, owner} = party;
 
   return (
@@ -45,7 +45,11 @@ const CreateSheet = () => {
 
         of([ledger, owner] as const)
           .pipe(createSheet(master, sheet), snd$)
-          .subscribe(console.log);
+          .subscribe((ownerSheet) =>
+            set({
+              ownerSheet,
+            }),
+          );
       }}
     >
       <Input

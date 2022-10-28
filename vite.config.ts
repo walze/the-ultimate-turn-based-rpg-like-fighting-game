@@ -10,8 +10,7 @@ config();
 
 const target = 'chrome100';
 
-const isContainer =
-  typeof process.env['DOCKER_CONTAINER'] !== 'undefined';
+const isContainer = typeof process.env['DOCKER'] !== 'undefined';
 const host = isContainer ? 'host.docker.internal' : '0.0.0.0';
 
 // https://vitejs.dev/config/
@@ -53,7 +52,9 @@ export default defineConfig({
   },
 
   build: {
-    polyfillModulePreload: false,
+    modulePreload: {
+      polyfill: false,
+    },
     target,
     rollupOptions: {
       output: {

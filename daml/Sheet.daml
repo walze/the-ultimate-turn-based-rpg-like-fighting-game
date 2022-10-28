@@ -28,6 +28,14 @@ template Sheet with
       totalHP = role.hp
       isAlive = hp > 0
 
+    choice ChangeStance: SheetID
+      with
+        action: Stance
+      controller owner
+      do
+          create this
+            with stance = action
+
     choice Suffer : SheetID
         with
             damage: Int

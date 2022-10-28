@@ -1,8 +1,9 @@
 {
   "verbose": true,
-  "watch": "./server/index.ts",
-  "ext": "*.ts",
+  "watch": ["./server/**/*", "./tsc/**/*"],
+  "ext": ".ts, .js",
   "execMap": {
-    "ts": "pnpm build:server"
+    "ts": "pnpm build:server",
+    "js": "pnpm start:server"
   }
 }
