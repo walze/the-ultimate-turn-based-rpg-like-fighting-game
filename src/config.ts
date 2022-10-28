@@ -2,7 +2,7 @@ import {Role} from '@daml.js/daml-project';
 import {mergeMap} from 'rxjs';
 import {fromFetch} from 'rxjs/fetch';
 
-const domain = process.env['DOMAIN'] ?? 'localhost';
+const domain = 'localhost';
 export const BASE_MODIFIER = 50;
 
 export const makeRole = (
@@ -26,8 +26,7 @@ export const getToken = (party: string[]) => {
   const data = {
     'https://daml.com/ledger-api': {
       ledgerId: 'sandbox',
-      applicationId:
-        process.env['APPLICATION_ID'] ?? 'daml-project',
+      applicationId: 'daml-project',
       actAs: party,
     },
   };

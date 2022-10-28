@@ -2,9 +2,17 @@ import {config} from 'dotenv';
 import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
 
+import pkg from './package.json';
+
+const dependencies = [...Object.keys(pkg.dependencies)];
+
 config();
 
 const target = 'chrome100';
+
+const isContainer =
+  typeof process.env['DOCKER_CONTAINER'] !== 'undefined';
+const host = isContainer ? 'host.docker.internal' : '0.0.0.0';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -23,12 +31,12 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/name/, ''),
       },
       '/api': {
-        target: 'http://host.docker.internal:7575',
+        target: `http://${host}:7575`,
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
       '/ws': {
-        target: 'ws://host.docker.internal:6865',
+        target: `ws://${host}:6865`,
         changeOrigin: true,
         ws: true,
         rewrite: (path) => path.replace(/^\/ws/, ''),
@@ -47,10 +55,19 @@ export default defineConfig({
   build: {
     polyfillModulePreload: false,
     target,
-  },
-  define: {
-    process: {
-      env: process.env,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          const name = dependencies.find((dep) =>
+            id.includes(dep),
+          );
+
+          if (name) {
+            return name;
+          }
+        },
+      },
     },
   },
+  define: {},
 });

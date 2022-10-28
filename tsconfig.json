@@ -6,6 +6,9 @@
     "postcss.config.cjs",
     "tailwind.config.cjs"
   ],
+  "include": [
+    "*.json",
+  ],
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig to read more about this file */
     /* Projects */
