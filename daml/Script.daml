@@ -2,7 +2,7 @@
 module Script where
 
 import Daml.Script
-import Weapon
+import Role
 import Sheet
 import CharAction
 

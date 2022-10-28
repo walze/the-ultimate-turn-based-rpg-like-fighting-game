@@ -1,6 +1,6 @@
 module Sheet where
 
-import Weapon
+import Role
 
 type Target = (Text, Party)
 type Key = (Party, Target)
@@ -9,12 +9,11 @@ type SheetID = ContractId Sheet
 data Stance = Attack | Defence
   deriving (Eq, Show)
 
-base_health = 8
 
 template Sheet with
     name: Text
     hp: Int
-    weapon: Weapon
+    role: Role
     owner: Party
     master: Party
     stance: Stance
@@ -26,7 +25,7 @@ template Sheet with
     maintainer fst key
 
     let
-      totalHP = base_health * weapon.ad
+      totalHP = role.hp
       isAlive = hp > 0
 
     choice Suffer : SheetID
@@ -39,6 +38,6 @@ template Sheet with
             create this with
                 hp = case stance of
                     -- completely arbitrary damage addition
-                    Attack -> hp - (damage + damage * (20 / weapon.ad))
+                    Attack -> hp - (damage - (round role.dr))
                     Defence -> hp - damage
 

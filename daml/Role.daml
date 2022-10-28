@@ -1,0 +1,16 @@
+
+module Role where
+
+data Role = Role
+  { weapon : Text
+  , ad : Decimal
+  , dr : Decimal
+  , hp : Decimal
+  } deriving (Eq, Show)
+
+base_mod = 50.0
+
+makeRole n = Role n . (* base_mod) . (* base_mod) . (* base_mod)
+
+sword = makeRole "Sword" 1.0 1.0 1.0
+dagger = makeRole "dagger" 2.0 0.5 0.5

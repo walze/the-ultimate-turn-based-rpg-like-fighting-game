@@ -8,7 +8,6 @@ import Modal from './component/Modal';
 import { concatMap, from, map, of, pipe, toArray } from 'rxjs';
 import { pure, rbind, snd$ } from './helpers/BiFunctor$';
 import Ledger, { UserRightHelper } from '@daml/ledger';
-import Loading from './component/Loading';
 import { findOrCreate } from './helpers/user';
 import SheetSelect from './component/SheetSelect';
 import Fight from './component/Fight';
@@ -42,7 +41,7 @@ const App: FC = () => {
     const [master, owner, foe] = parties;
 
     set({ ledger, party: { master, owner, foe } });
-  }, uNames);
+  }, [ledger, ...uNames]);
 
   // this should not exist
   useEffect(() => {
