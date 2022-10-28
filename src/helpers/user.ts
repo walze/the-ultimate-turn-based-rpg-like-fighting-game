@@ -1,10 +1,7 @@
-import Ledger, {
-  UserRight,
-  UserRightHelper,
-} from '@daml/ledger';
+import Ledger, {UserRight, UserRightHelper} from '@daml/ledger';
 import assert from 'assert';
-import { map, of, pipe, tap } from 'rxjs';
-import { pure, rbind, rmap, snd$ } from './BiFunctor$';
+import {map, of, pipe, tap} from 'rxjs';
+import {pure, rbind, rmap, snd$} from './BiFunctor$';
 
 const r = /^[a-z0-9@^$.!`\-#+'~_|:]{1,128}$/;
 

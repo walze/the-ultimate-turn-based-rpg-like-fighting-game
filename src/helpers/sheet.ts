@@ -1,14 +1,15 @@
-import { Sheet } from '@daml.js/daml-project';
-import Ledger, { Event } from '@daml/ledger';
-import { of, map, lastValueFrom } from 'rxjs';
-import { BASE_HEALTH, WEAPONS } from '../config';
-import { acceptSheetCreate } from './action';
+import {Sheet} from '@daml.js/daml-project';
+import type {Event} from '@daml/ledger';
+import type Ledger from '@daml/ledger';
+import {of, map, lastValueFrom} from 'rxjs';
+import {ROLES} from '../config';
+import {acceptSheetCreate} from './action';
 import assert_id from './assert_id';
-import { rbind, rmap, snd$ } from './BiFunctor$';
-import { getName } from './name-api';
-import { findParty } from './user';
+import {rbind, rmap, snd$} from './BiFunctor$';
+import {getName} from './name-api';
+import {findParty} from './user';
 
-export type SheetCreate = Omit<Sheet.Sheet, 'owner' | 'master'>;
+export type SheetCreate = Omit<Sheet.Sheet, 'master' | 'owner'>;
 
 export const createSheet = (
   masterID: string,
@@ -30,7 +31,7 @@ export const createSheet = (
         (sheet) =>
           sheet[1] as Extract<
             Event<Sheet.Sheet>,
-            { created: unknown }
+            {created: unknown}
           >,
       ),
       map((a) => a.created.payload),
@@ -38,7 +39,7 @@ export const createSheet = (
   );
 
 export const deleteSheet = rbind(
-  (k: Sheet.Sheet.Key, l: Ledger) =>
+  async (k: Sheet.Sheet.Key, l: Ledger) =>
     l.archiveByKey(Sheet.Sheet, k),
 );
 
@@ -49,13 +50,13 @@ export const randomSheetTemplate =
       return JSON.parse(current_foe) as Sheet.Sheet;
 
     const name = current_foe || (await lastValueFrom(getName()));
-    const weapon =
-      WEAPONS[Math.floor(Math.random() * WEAPONS.length)]!;
+    const role =
+      ROLES[Math.floor(Math.random() * ROLES.length)]!;
 
     const r: SheetCreate = {
       name,
-      weapon,
-      hp: BASE_HEALTH * +weapon.ad + '',
+      role,
+      hp: role.hp,
       stance: 'Defence',
     };
 

@@ -1,18 +1,18 @@
-import { Sheet as DSheet } from '@daml.js/daml-project';
+import {Sheet as DSheet} from '@daml.js/daml-project';
 import {
   ChartBarIcon,
   EyeDropperIcon,
   HeartIcon,
   Squares2X2Icon,
 } from '@heroicons/react/20/solid';
-import { ReactNode } from 'react';
+import {ReactNode} from 'react';
 import Loading from './Loading';
 
 type StatProps = {
   children: ReactNode[];
 };
 
-const Stat = ({ children: [icon, stat, value] }: StatProps) => (
+const Stat = ({children: [icon, stat, value]}: StatProps) => (
   <li className="flex w-1/2  items-center mt-2.5 text-gray-700">
     <h3 className="flex items-center px-2 text-sm">
       {icon} <span className="font-extrabold">{stat}</span>
@@ -27,14 +27,14 @@ type Props = {
 };
 
 const Sheet = (props: Props) => {
-  const { sheet } = props;
+  const {sheet} = props;
 
   if (!sheet) return <Loading label="sheet" />;
 
   const {
     name,
     hp,
-    weapon: { ad, name: wname },
+    weapon: {ad, name: wname},
     stance,
   } = sheet;
 

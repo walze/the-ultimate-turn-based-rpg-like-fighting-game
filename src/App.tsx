@@ -1,14 +1,14 @@
-import { FC, useEffect } from 'react';
-import { getLedger } from './helpers/ledger';
+import {FC, useEffect} from 'react';
+import {getLedger} from './helpers/ledger';
 import use$ from './helpers/use$';
 import Login from './component/Login';
-import { useStore } from './helpers/store';
+import {useStore} from './helpers/store';
 import CreateSheet from './component/CreateSheet';
 import Modal from './component/Modal';
-import { concatMap, from, map, of, pipe, toArray } from 'rxjs';
-import { pure, rbind, snd$ } from './helpers/BiFunctor$';
-import Ledger, { UserRightHelper } from '@daml/ledger';
-import { findOrCreate } from './helpers/user';
+import {concatMap, from, map, of, pipe, toArray} from 'rxjs';
+import {pure, rbind, snd$} from './helpers/BiFunctor$';
+import Ledger, {UserRightHelper} from '@daml/ledger';
+import {findOrCreate} from './helpers/user';
 import SheetSelect from './component/SheetSelect';
 import Fight from './component/Fight';
 
@@ -27,7 +27,7 @@ export const getMain = pipe(
 );
 
 const App: FC = () => {
-  const { master, owner, foe, set, ownerSheet } = useStore();
+  const {master, owner, foe, set, ownerSheet} = useStore();
   const uNames = [master, owner, foe];
 
   const [ledger, parties] =
@@ -40,7 +40,7 @@ const App: FC = () => {
     if (!ledger || !parties) return;
     const [master, owner, foe] = parties;
 
-    set({ ledger, party: { master, owner, foe } });
+    set({ledger, party: {master, owner, foe}});
   }, [ledger, ...uNames]);
 
   // this should not exist

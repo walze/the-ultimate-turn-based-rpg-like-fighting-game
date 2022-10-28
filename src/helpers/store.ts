@@ -1,4 +1,4 @@
-import { Sheet } from '@daml.js/daml-project';
+import {Sheet} from '@daml.js/daml-project';
 import Ledger from '@daml/ledger';
 import create from 'zustand';
 

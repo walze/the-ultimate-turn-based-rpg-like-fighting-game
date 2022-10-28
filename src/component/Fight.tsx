@@ -1,21 +1,21 @@
-import { tap } from 'rxjs';
+import {tap} from 'rxjs';
 import slugify from 'slugify';
 import Button from '../form/Button';
-import { pure, rmap, snd$ } from '../helpers/BiFunctor$';
+import {pure, rmap, snd$} from '../helpers/BiFunctor$';
 import {
   randomSheetTemplate,
   key,
   isKeyValid,
   deleteSheet,
 } from '../helpers/sheet';
-import { useStore } from '../helpers/store';
-import { findOrCreate } from '../helpers/user';
+import {useStore} from '../helpers/store';
+import {findOrCreate} from '../helpers/user';
 import Loading from './Loading';
 import Sheet from './Sheet';
 
 const Fight = () => {
   const store = useStore();
-  const { ledger, party, set, master } = store;
+  const {ledger, party, set, master} = store;
 
   if (!ledger) return <Loading />;
 
@@ -42,7 +42,7 @@ const Fight = () => {
                     owner: p,
                     master,
                   },
-                  party: { ...party, foe: p },
+                  party: {...party, foe: p},
                 });
               });
           }}
@@ -72,7 +72,7 @@ const Fight = () => {
               deleteSheet,
               tap(console.log),
               tap(() => {
-                set({ ownerSheet: undefined });
+                set({ownerSheet: undefined});
                 window.location.replace('/');
               }),
             )

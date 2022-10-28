@@ -1,3 +1,4 @@
+#### --- INSTALL --- ####
 FROM node:latest AS install
 
 WORKDIR /app
@@ -14,7 +15,7 @@ COPY . .
 ARG DOCKER=TRUE
 ENV DOCKER=$DOCKER
 
-# build the server
+#### --- SERVER --- ####
 FROM install as server
 
 WORKDIR /app
@@ -23,7 +24,7 @@ EXPOSE 3000
 
 CMD ["pnpm", "start:server"]
 
-# build the client
+#### --- CLIENT --- ####
 FROM install AS client
 
 WORKDIR /app

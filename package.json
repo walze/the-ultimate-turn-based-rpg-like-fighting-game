@@ -8,7 +8,7 @@
     "build:client": "vite build",
     "build:daml": "daml build",
     "build:server": "ts-node-esm -P server/tsconfig.node.json ./server/index.ts",
-    "codegen": "pnpm build && daml codegen js",
+    "codegen": "daml build && daml codegen js && pnpm install ./daml.js/daml-project-1.0.0",
     "logs": "docker compose logs -f",
     "preview": "vite preview",
     "start": "concurrently --kill-others 'pnpm:start:*'",
@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@daml.js/daml-project": "file:daml.js/daml-project-1.0.0",
+    "@daml.js/daml-project-1.0.0": "link:daml.js/daml-project-1.0.0",
     "@daml/hub-react": "latest",
     "@daml/ledger": "latest",
     "@daml/react": "latest",
@@ -43,6 +44,8 @@
     "@types/node": "^18.11.7",
     "@types/react": "^18.0.24",
     "@types/react-dom": "^18.0.8",
+    "@typescript-eslint/eslint-plugin": "^5.41.0",
+    "@typescript-eslint/parser": "^5.41.0",
     "@vitejs/plugin-react": "^2.2.0",
     "assert": "^2.0.0",
     "body-parser": "^1.20.1",
@@ -52,6 +55,10 @@
     "daml.js": "file:daml.js",
     "dotenv": "^16.0.3",
     "esbuild": "^0.15.12",
+    "eslint": "^8.26.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.31.10",
     "express": "^4.18.2",
     "https-proxy-agent": "^5.0.1",
     "js-cookie": "^3.0.1",
@@ -59,6 +66,7 @@
     "lodash": "^4.17.21",
     "node-fetch": "^3.2.10",
     "nodemon": "^2.0.20",
+    "prettier": "^2.7.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rxjs": "^7.5.7",
@@ -69,10 +77,6 @@
     "ts-node-dev": "^2.0.0",
     "typescript": "^4.8.4",
     "vite": "^3.2.0",
-    "zustand": "^4.1.3",
-    "@typescript-eslint/eslint-plugin": "^5.41.0",
-    "@typescript-eslint/parser": "^5.41.0",
-    "eslint": "^8.26.0",
-    "eslint-plugin-react": "^7.31.10"
+    "zustand": "^4.1.3"
   }
 }

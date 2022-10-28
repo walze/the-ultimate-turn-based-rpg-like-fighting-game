@@ -1,5 +1,5 @@
-import { Fragment, useState } from 'react';
-import { Listbox, Transition } from '@headlessui/react';
+import {Fragment, useState} from 'react';
+import {Listbox, Transition} from '@headlessui/react';
 import {
   CheckIcon,
   ChevronUpDownIcon,
@@ -10,7 +10,7 @@ type Props = {
   name: string;
 };
 
-const Select = ({ list, name }: Props) => {
+const Select = ({list, name}: Props) => {
   const [selected, setSelected] = useState(list[0]);
 
   return (
@@ -53,7 +53,7 @@ const Select = ({ list, name }: Props) => {
               {list.map((item) => (
                 <Listbox.Option
                   key={item}
-                  className={({ active }) =>
+                  className={({active}) =>
                     `relative cursor-default select-none py-2 pl-10 pr-4 ${
                       active
                         ? 'bg-amber-100 text-amber-900'
@@ -62,7 +62,7 @@ const Select = ({ list, name }: Props) => {
                   }
                   value={item}
                 >
-                  {({ selected }) => (
+                  {({selected}) => (
                     <>
                       <span
                         className={`block truncate ${

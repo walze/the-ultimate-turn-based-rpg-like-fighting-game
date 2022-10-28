@@ -1,4 +1,4 @@
-import { InputHTMLAttributes } from 'react';
+import {InputHTMLAttributes} from 'react';
 
 type Props = {
   label: string;
@@ -6,12 +6,7 @@ type Props = {
   name?: string;
 } & InputHTMLAttributes<HTMLInputElement>;
 
-const Input = ({
-  label,
-  placeholder,
-  name,
-  ...props
-}: Props) => {
+const Input = ({label, placeholder, name, ...props}: Props) => {
   const id = label.toLowerCase().replace(' ', '-');
 
   return (

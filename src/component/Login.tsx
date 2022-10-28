@@ -1,6 +1,6 @@
-import { useStore } from '../helpers/store';
+import {useStore} from '../helpers/store';
 import Input from '../form/Input';
-import { FormEvent, useEffect } from 'react';
+import {FormEvent, useEffect} from 'react';
 import Button from '../form/Button';
 import cookie from 'js-cookie';
 
@@ -19,12 +19,12 @@ const submit =
   };
 
 const Login = () => {
-  const { set } = useStore();
+  const {set} = useStore();
 
   const handleSubmit = (owner: string) => {
-    cookie.set('owner', owner, { expires: 0.004 });
+    cookie.set('owner', owner, {expires: 0.004});
 
-    set({ owner });
+    set({owner});
   };
 
   useEffect(() => {

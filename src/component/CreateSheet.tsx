@@ -1,14 +1,14 @@
-import { FormEvent } from 'react';
-import { of } from 'rxjs';
-import { useStore } from '../helpers/store';
-import { WEAPONS, BASE_HEALTH } from '../config';
+import {FormEvent} from 'react';
+import {of} from 'rxjs';
+import {useStore} from '../helpers/store';
+import {ROLES} from '../config';
 import Input from '../form/Input';
 import Select from '../form/Select';
-import { createSheet, SheetCreate } from '../helpers/sheet';
-import { snd$ } from '../helpers/BiFunctor$';
+import {createSheet, SheetCreate} from '../helpers/sheet';
+import {snd$} from '../helpers/BiFunctor$';
 
 const formatSheet = (e: FormEvent<HTMLFormElement>) => {
-  const { currentTarget: f } = e;
+  const {currentTarget: f} = e;
   e.preventDefault();
 
   if (!f) return;
@@ -18,16 +18,14 @@ const formatSheet = (e: FormEvent<HTMLFormElement>) => {
   );
   const name = inputs['name'];
 
-  const weapon = WEAPONS.find(
-    (w) => w.name === inputs['weapon'],
-  );
+  const role = ROLES.find((r) => r.weapon === inputs['weapon']);
 
-  if (!weapon || !name) return;
+  if (!role || !name) return;
 
   const sheet: SheetCreate = {
     name,
-    weapon: weapon,
-    hp: BASE_HEALTH * +weapon.ad + '',
+    hp: role.hp,
+    role: role,
     stance: 'Defence',
   };
 
@@ -35,8 +33,8 @@ const formatSheet = (e: FormEvent<HTMLFormElement>) => {
 };
 
 const CreateSheet = () => {
-  const { party, ledger, set } = useStore();
-  const { master, owner } = party;
+  const {party, ledger} = useStore();
+  const {master, owner} = party;
 
   return (
     <form
@@ -56,7 +54,7 @@ const CreateSheet = () => {
         placeholder="Character name"
       />
 
-      <Select name="weapon" list={WEAPONS.map((w) => w.name)} />
+      <Select name="weapon" list={ROLES.map((r) => r.weapon)} />
 
       <button
         type="submit"

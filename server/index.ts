@@ -3,7 +3,7 @@ import cors from 'cors';
 import bparser from 'body-parser';
 import jwt from 'jsonwebtoken';
 
-const { sign } = jwt;
+const {sign} = jwt;
 
 const isDocker = process.env['DOCKER'] !== undefined;
 
@@ -13,7 +13,7 @@ const app = express();
 
 app.use(cors());
 app.use(bparser.json());
-app.use(bparser.urlencoded({ extended: true }));
+app.use(bparser.urlencoded({extended: true}));
 
 app.listen(3000, () => {
   console.log(

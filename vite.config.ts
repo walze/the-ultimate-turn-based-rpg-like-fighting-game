@@ -1,5 +1,5 @@
-import { config } from 'dotenv';
-import { defineConfig } from 'vite';
+import {config} from 'dotenv';
+import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
 
 config();

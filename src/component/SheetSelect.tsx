@@ -1,20 +1,20 @@
-import { useStore } from '../helpers/store';
+import {useStore} from '../helpers/store';
 import Input from '../form/Input';
-import { useEffect } from 'react';
+import {useEffect} from 'react';
 import Button from '../form/Button';
 import cookie from 'js-cookie';
-import { Sheet } from '@daml.js/daml-project';
+import {Sheet} from '@daml.js/daml-project';
 import assert_id from '../helpers/assert_id';
-import { isKeyValid, key } from '../helpers/sheet';
+import {isKeyValid, key} from '../helpers/sheet';
 
 const SheetSelect = () => {
-  const { set, ownerSheet, ledger, party } = useStore();
+  const {set, ownerSheet, ledger, party} = useStore();
 
   const handleSubmit = (name: string) => {
-    cookie.set('sheet', name, { expires: 0.004 });
-    const os = { ...ownerSheet, name } as typeof ownerSheet;
+    cookie.set('sheet', name, {expires: 0.004});
+    const os = {...ownerSheet, name} as typeof ownerSheet;
 
-    set({ ownerSheet: os });
+    set({ownerSheet: os});
   };
 
   useEffect(() => {
@@ -31,7 +31,7 @@ const SheetSelect = () => {
       .fetchByKey(Sheet.Sheet, skey)
       .then((s) => s?.payload)
       .then(assert_id())
-      .then((ownerSheet) => set({ ownerSheet }))
+      .then((ownerSheet) => set({ownerSheet}))
       .catch(() => {
         console.warn('No sheet found for', name);
 

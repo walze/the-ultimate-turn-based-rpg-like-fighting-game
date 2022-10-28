@@ -1,4 +1,4 @@
-import { tap } from 'rxjs';
+import {tap} from 'rxjs';
 
 export const array = <T>(a: T | T[]): T[] =>
   Array.isArray(a) ? a : [a];

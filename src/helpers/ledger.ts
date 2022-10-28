@@ -1,7 +1,7 @@
 import Ledger from '@daml/ledger';
-import { map, pipe } from 'rxjs';
-import { getToken } from '../config';
-import { lbind, lmap, pair } from './BiFunctor$';
+import {map, pipe} from 'rxjs';
+import {getToken} from '../config';
+import {lbind, lmap, pair} from './BiFunctor$';
 
 const host = window.location.host;
 

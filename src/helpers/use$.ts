@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from 'react';
-import { Observable } from 'rxjs';
+import {useState, useEffect, useMemo} from 'react';
+import {Observable} from 'rxjs';
 
 const use$ = <T>(f: () => Observable<T>, deps: any[]) => {
   const [s, ss] = useState<T | null>(null);

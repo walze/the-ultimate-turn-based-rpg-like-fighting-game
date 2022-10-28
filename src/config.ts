@@ -1,21 +1,26 @@
-import { Weapon } from '@daml.js/daml-project';
-import { mergeMap} from 'rxjs';
-import { fromFetch } from 'rxjs/fetch';
+import {Role} from '@daml.js/daml-project';
+import {mergeMap} from 'rxjs';
+import {fromFetch} from 'rxjs/fetch';
 
 const domain = process.env['DOMAIN'] ?? 'localhost';
+export const BASE_MODIFIER = 50;
 
-export const Sword: Weapon.Weapon = {
-  name: 'Sword',
-  ad: '10',
-};
+export const makeRole = (
+  weapon: string,
+  ad: number,
+  dr: number,
+  hp: number,
+): Role.Role => ({
+  weapon,
+  ad: `${BASE_MODIFIER / ad}`,
+  dr: `${BASE_MODIFIER / dr}`,
+  hp: `${BASE_MODIFIER / hp}`,
+});
 
-export const Dagger: Weapon.Weapon = {
-  name: 'Dagger',
-  ad: '5',
-};
+export const Sword = makeRole('Sword', 10, 10, 1);
+export const Dagger = makeRole('Dagger', 6, 4, 1);
 
-export const BASE_HEALTH = 8;
-export const WEAPONS = [Sword, Dagger];
+export const ROLES = [Sword, Dagger];
 
 export const getToken = (party: string[]) => {
   const data = {

@@ -1,6 +1,6 @@
-import { useRef, useEffect } from 'react';
+import {useRef, useEffect} from 'react';
 
-type OBJ = { [key: string]: unknown };
+type OBJ = {[key: string]: unknown};
 
 // Hook
 const useWhyChanged = (props: OBJ) => {
