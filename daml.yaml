@@ -6,9 +6,6 @@ name: daml-project
 source: daml
 init-script: Script:setup
 start-navigator: false
-parties:
-  - master
-  - wallace
 version: 1.0.0
 dependencies:
   - daml-prim

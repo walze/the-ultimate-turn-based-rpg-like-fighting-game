@@ -1,7 +1,7 @@
 import Ledger from '@daml/ledger';
 import {Sheet as DamlSheet} from '@daml.js/daml-project';
 import {useEffect} from 'react';
-import {lastValueFrom, map, pipe, tap} from 'rxjs';
+import {lastValueFrom, map, mergeMap, of, pipe, tap} from 'rxjs';
 import slugify from 'slugify';
 import Button from '../form/Button';
 import {pure, rbind, rmap, snd$} from '../helpers/BiFunctor$';
@@ -11,34 +11,45 @@ import {
   isKeyValid,
   deleteSheet,
   changeStance,
+  createSheet,
+  findSheet,
 } from '../helpers/sheet';
 import {useStore} from '../helpers/store';
 import {findOrCreate} from '../helpers/user';
 import Loading from './Loading';
 import Sheet from './Sheet';
-import {assert_id$} from '../helpers/assert_id';
+import {assert$, assert_id$} from '../helpers/assert_id';
 import {
   EyeDropperIcon,
   ShieldExclamationIcon,
 } from '@heroicons/react/20/solid';
 import {extractExertion} from '../helpers/extractExertion';
+import {getName} from '../helpers/name-api';
+import use$ from '../helpers/use$';
 
-const getFoe = async (ledger: Ledger, master: string) => {
-  const sheet = await randomSheetTemplate();
-  const pName = slugify(sheet.name).toLocaleLowerCase();
+const getFoe = (l: Ledger, master: string) => {
+  const cached = localStorage.getItem('current_foe');
+  const slug = (s = '') => slugify(s).toLowerCase();
 
-  const ob = pure(ledger, pName).pipe(
-    findOrCreate,
-    rmap((p) => p.identifier),
-    snd$,
-    map((p) => ({
-      ...sheet,
-      owner: p,
-      master,
-    })),
-  );
+  console.log(l);
 
-  return lastValueFrom(ob);
+  const sheet$ = cached
+    ? pure(l, key(master, cached, slug(cached))).pipe(findSheet)
+    : pure(l, undefined).pipe(
+        rbind(getName),
+        rbind((n, l) =>
+          pure(l, n).pipe(
+            rmap(slug),
+            findOrCreate,
+            snd$,
+            map((p) => p.identifier),
+          ),
+        ),
+        createSheet(master, randomSheetTemplate('whatever')),
+        snd$,
+      );
+
+  return sheet$.pipe(assert$('Failed to get foe'));
 };
 
 const change = (stance: DamlSheet.Stance) =>
@@ -55,7 +66,7 @@ const change = (stance: DamlSheet.Stance) =>
 
 const Fight = () => {
   const store = useStore();
-  const {ledger, party, set, master} = store;
+  const {ledger, party, set, master, turn} = store;
 
   const oKey = key(
     party.master || '',
@@ -63,18 +74,30 @@ const Fight = () => {
     party.owner || '',
   );
 
-  useEffect(() => {
-    if (!ledger || !master) return;
+  const foKey = key(
+    party.master || '',
+    store.foeSheet?.name || '',
+    party.foe || '',
+  );
 
-    getFoe(ledger, master).then((foeSheet) => {
-      set({
-        foeSheet,
-        party: {...party, foe: foeSheet.owner},
-      });
-    });
-  }, [ledger, master]);
+  const foeSheet = use$(
+    () => (ledger ? getFoe(ledger, master) : of(null)),
+    [master],
+  );
+
+  console.log(foeSheet);
+
+  const turnKey = turn ? oKey : foKey;
+  const turnSheet = turn ? store.ownerSheet : store.foeSheet;
+  const turnSheetName = turn ? 'ownerSheet' : 'foeSheet';
+
+  // useEffect(() => {
+  //   set({foeSheet: foeSheet ?? undefined});
+  // }, [foeSheet]);
 
   if (!ledger) return <Loading />;
+
+  console.log(foKey);
 
   return (
     <section className="flex flex-col gap-4">
@@ -87,14 +110,20 @@ const Fight = () => {
           className="w-1/2"
           onClick={async () => {
             const id = await ledger
-              .fetchByKey(DamlSheet.Sheet, oKey)
+              .fetchByKey(DamlSheet.Sheet, turnKey)
               .then((a) => a?.contractId);
+
+            console.warn(id);
 
             if (!id) return;
 
-            pure(ledger, oKey)
+            pure(ledger, turnKey)
               .pipe(change('Attack'))
-              .subscribe((ownerSheet) => set({ownerSheet}));
+              .subscribe((sheet) => {
+                console.log(sheet);
+
+                set({[turnSheetName]: sheet, turn: !turn});
+              });
           }}
         >
           <EyeDropperIcon className="w-4 mr-2" />
@@ -105,14 +134,18 @@ const Fight = () => {
           className="w-1/2"
           onClick={async () => {
             const id = await ledger
-              .fetchByKey(DamlSheet.Sheet, oKey)
+              .fetchByKey(DamlSheet.Sheet, turnKey)
               .then((a) => a?.contractId);
 
             if (!id) return;
 
-            pure(ledger, oKey)
+            pure(ledger, turnKey)
               .pipe(change('Defence'))
-              .subscribe((ownerSheet) => set({ownerSheet}));
+              .subscribe((sheet) => {
+                console.log(sheet);
+
+                set({[turnSheetName]: sheet, turn: !turn});
+              });
           }}
         >
           <ShieldExclamationIcon className="w-4 mr-2" />

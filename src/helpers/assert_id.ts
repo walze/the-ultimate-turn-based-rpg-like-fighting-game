@@ -1,5 +1,5 @@
 import assert from 'assert';
-import {of} from 'rxjs';
+import {map, of} from 'rxjs';
 
 export class AssertionError<T> extends Error {
   constructor(message: string, public data: T) {
@@ -26,5 +26,7 @@ export const assert_id$ =
   (m?: any) =>
   <T>(t: T) =>
     of(assert_id(m)(t));
+
+export const assert$ = (s?: string) => map(assert_id(s));
 
 export default assert_id;

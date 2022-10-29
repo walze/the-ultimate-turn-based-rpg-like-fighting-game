@@ -27,7 +27,9 @@ export const getMain = pipe(
 );
 
 const App: FC = () => {
-  const {master, owner, foe, set, ownerSheet} = useStore();
+  const store = useStore();
+  console.log('store', store);
+  const {master, owner, foe, set, ownerSheet} = store;
   const uNames = [master, owner, foe];
 
   const [ledger, parties] =

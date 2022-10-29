@@ -5,7 +5,6 @@
   ],
   "compilerOptions": {
     "module": "ESNext",
-    "rootDir": ".", /* Specify the root folder within your source files. */
     "esModuleInterop": true
   }
 }

@@ -12,9 +12,9 @@ export const makeRole = (
   hp: number,
 ): Role.Role => ({
   weapon,
-  ad: `${BASE_MODIFIER / ad}`,
-  dr: `${BASE_MODIFIER / dr}`,
-  hp: `${BASE_MODIFIER / hp}`,
+  ad: (BASE_MODIFIER / ad).toFixed(0),
+  dr: (BASE_MODIFIER / dr).toFixed(0),
+  hp: (BASE_MODIFIER / hp).toFixed(0),
 });
 
 export const Sword = makeRole('Sword', 10, 10, 1);
@@ -27,7 +27,8 @@ export const getToken = (party: string[]) => {
     'https://daml.com/ledger-api': {
       ledgerId: 'sandbox',
       applicationId: 'daml-project',
-      actAs: party,
+      actAs: ['participant_admin', ...party],
+      admin: true,
     },
   };
 

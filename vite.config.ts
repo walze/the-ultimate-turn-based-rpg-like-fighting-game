@@ -32,6 +32,9 @@ export default defineConfig({
       '/api': {
         target: `http://${host}:7575`,
         changeOrigin: true,
+        headers: {
+          'reverse-proxy': 'vite',
+        },
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
       '/ws': {
@@ -50,7 +53,14 @@ export default defineConfig({
   esbuild: {
     target,
   },
-
+  resolve: {
+    alias: [
+      {
+        find: '@daml.js/daml-project',
+        replacement: './daml.js/daml-project-1.0.0/lib/index.js',
+      },
+    ],
+  },
   build: {
     modulePreload: {
       polyfill: false,
