@@ -49,19 +49,16 @@ export default defineConfig({
     esbuildOptions: {
       target,
     },
+    include: ['@daml.js/daml-project'],
   },
   esbuild: {
     target,
   },
-  resolve: {
-    alias: [
-      {
-        find: '@daml.js/daml-project',
-        replacement: './daml.js/daml-project-1.0.0/lib/index.js',
-      },
-    ],
-  },
   build: {
+    commonjsOptions: {
+      include: [/\@daml\.js\/daml\-project/, /node_modules/],
+      transformMixedEsModules: true,
+    },
     modulePreload: {
       polyfill: false,
     },

@@ -3,7 +3,7 @@ dist
 /.daml
 /log
 navigator.log
-daml.js
+@daml.js
 .tsbuildinfo
 
 node_modules
