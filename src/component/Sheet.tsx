@@ -1,6 +1,5 @@
 import {Sheet as DSheet} from '@daml.js/daml-project';
 import {
-  ChartBarIcon,
   EyeDropperIcon,
   HeartIcon,
   Squares2X2Icon,
@@ -34,7 +33,7 @@ const Sheet = (props: Props) => {
   const {
     name,
     hp,
-    role: {weapon},
+    role: {weapon, hp: thp},
     stance,
   } = sheet;
 
@@ -49,7 +48,7 @@ const Sheet = (props: Props) => {
           <Stat>
             <HeartIcon className="w-4 h-4 mr-1" />
             HP
-            {hp}
+            {`${hp}`}
           </Stat>
 
           <Stat>

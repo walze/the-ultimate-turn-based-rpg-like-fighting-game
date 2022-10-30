@@ -1,7 +1,7 @@
 import {
   from,
   map,
-  mergeMap,
+  concatMap,
   Observable,
   ObservableInput,
   of,
@@ -23,9 +23,9 @@ export type rmap = <A, B, C>(
   f: (b: B, a: A) => C,
 ) => (p: Pair<A, B>) => Pair<A, C>;
 
-export type fmap = <A, B, C>(
-  f: (a: A, c: C) => B,
-) => (p: Pair<A, C>) => Pair<B, C>;
+export type fmap = <A, B, C, D>(
+  f: (a: A, c: C) => readonly [B, D],
+) => (p: Pair<A, C>) => Pair<B, D>;
 
 export type bmap = <A, B, C>(
   f: (b: B) => C,
@@ -51,32 +51,33 @@ export const lmap: lmap = (f) => (p) =>
   p.pipe(map(([a, b]) => pair(f(a, b), b)));
 export const rmap: rmap = (f) => (p) =>
   p.pipe(map(([a, b]) => pair(a, f(b, a))));
+
 export const fmap: fmap = (f) => (p) =>
-  p.pipe(map(([a, b]) => pair(f(a, b), b)));
+  p.pipe(map(([a, c]) => f(a, c)));
 
 export const bmap: bmap = (f) => (p) =>
   p.pipe(map(([a, b]) => pair(a, f(b))));
 
 export const lbind: lbind = (f) => (p) =>
   p.pipe(
-    mergeMap(([a, b]) =>
+    concatMap(([a, b]) =>
       from(f(a, b)).pipe(map((c) => pair(c, b))),
     ),
   );
 
 export const rbind: rbind = (f) => (p) =>
   p.pipe(
-    mergeMap(([a, b]) =>
+    concatMap(([a, b]) =>
       from(f(b, a)).pipe(map((c) => pair(a, c))),
     ),
   );
 
 export const bbind: bbind = (f) => (p) =>
-  p.pipe(mergeMap(([a, b]) => f(a, b)));
+  p.pipe(concatMap(([a, b]) => f(a, b)));
 
 export const fbind: fbind = (f) => (p) =>
   p.pipe(
-    mergeMap(([a, b]) =>
+    concatMap(([a, b]) =>
       from(f(a, b)).pipe(map((c) => pair(c, b))),
     ),
   );

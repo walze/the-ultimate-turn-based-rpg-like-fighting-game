@@ -4,7 +4,14 @@ import {useEffect} from 'react';
 import {catchError, map, of, pipe, tap} from 'rxjs';
 import slugify from 'slugify';
 import Button from '../form/Button';
-import {pure, rbind, rmap, snd$} from '../helpers/BiFunctor$';
+import {
+  fmap,
+  lbind,
+  pure,
+  rbind,
+  rmap,
+  snd$,
+} from '../helpers/BiFunctor$';
 import {
   randomSheetTemplate,
   key,
@@ -93,8 +100,6 @@ const Fight = () => {
   // const turnSheet = turn ? store.ownerSheet : store.foeSheet;
   const turnSheetName = turn ? 'ownerSheet' : 'foeSheet';
 
-  console.log(store);
-
   useEffect(() => {
     foe && set({foe: slug(foe)});
     foeSheet && set({foeSheet: foeSheet});
@@ -111,15 +116,21 @@ const Fight = () => {
             .then((a) => a?.contractId),
         ),
         rbind(assert_id$('Sheet not found')),
-        changeStance(action),
-        extractCreatedExertion,
-        rbind((e, l) =>
-          pure(l, e.payload).pipe(suffer(e.contractId), snd$),
+        rbind((cid, l) =>
+          pure(l, cid).pipe(
+            changeStance(action),
+            extractCreatedExertion,
+            fmap((_, r) => [r.contractId, r.payload]),
+            lbind((cid, sheet) =>
+              pure(l, sheet).pipe(suffer(cid)),
+            ),
+          ),
         ),
+        snd$,
         snd$,
       )
       .subscribe((e) => {
-        const sheet = e.payload;
+        const sheet = e;
         console.log(sheet);
 
         set({[turnSheetName]: sheet, turn: !turn});
