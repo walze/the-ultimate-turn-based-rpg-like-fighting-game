@@ -1,12 +1,14 @@
 import Ledger from '@daml/ledger';
 import {Sheet as DamlSheet} from '@daml.js/daml-project';
 import {useEffect} from 'react';
-import {catchError, map, of, pipe, tap} from 'rxjs';
+import {catchError, map, mergeMap, of, pipe, tap} from 'rxjs';
 import slugify from 'slugify';
 import Button from '../form/Button';
 import {
+  bind,
   fmap,
   lbind,
+  lmap,
   pure,
   rbind,
   rmap,
@@ -21,7 +23,7 @@ import {
   createSheet,
   findSheet,
 } from '../helpers/sheet';
-import {useStore} from '../helpers/store';
+import {State, StateFN, useStore} from '../helpers/store';
 import {findOrCreate} from '../helpers/user';
 import Loading from './Loading';
 import Sheet from './Sheet';
@@ -35,6 +37,7 @@ import {getName} from '../helpers/name-api';
 import use$ from '../helpers/use$';
 import {Stance} from '@daml.js/daml-project-1.0.0/lib/Sheet';
 import {suffer} from '../helpers/action';
+import {ContractId} from '@daml/types';
 
 const slug = (s = '') => slugify(s).toLowerCase();
 
@@ -42,7 +45,6 @@ const getFoe = (name: string, l: Ledger, master: string) => {
   const createFoe = (name: string) =>
     pipe(
       rmap(slug),
-      tap(console.warn),
       findOrCreate,
       rmap((p) => p.identifier),
       createSheet(master, randomSheetTemplate(name)),
@@ -62,6 +64,43 @@ const getFoe = (name: string, l: Ledger, master: string) => {
       ),
     ),
     // assert$('get foe failed'),
+  );
+};
+
+const actionPipe = (
+  action: Stance,
+  target: ContractId<DamlSheet.Sheet>,
+  turnName: 'ownerSheet' | 'foeSheet',
+) => {
+  const changes: Partial<State> = {};
+  const notTurn =
+    turnName === 'foeSheet' ? 'ownerSheet' : 'foeSheet';
+
+  return pipe(
+    rbind((k: DamlSheet.Sheet.Key, l: Ledger) =>
+      l.fetchByKey(DamlSheet.Sheet, k),
+    ),
+    rbind(assert_id$('Sheet not found')),
+    rbind((e, l) =>
+      pure(e.contractId, e.payload).pipe(
+        lbind((cid) =>
+          pure(l, cid).pipe(
+            changeStance(action),
+            snd$,
+            tap((e) => (changes[turnName] = e.payload)),
+          ),
+        ),
+        mergeMap(([e]) =>
+          pure(l, e.payload).pipe(
+            suffer(target),
+            snd$,
+            tap((e) => (changes[notTurn] = e.payload)),
+          ),
+        ),
+      ),
+    ),
+
+    map(() => changes),
   );
 };
 
@@ -97,7 +136,7 @@ const Fight = () => {
   }, [ledger, foe, party.foe]);
 
   const turnKey = turn ? oKey : foKey;
-  // const turnSheet = turn ? store.ownerSheet : store.foeSheet;
+  const coTurnKey = !turn ? oKey : foKey;
   const turnSheetName = turn ? 'ownerSheet' : 'foeSheet';
 
   useEffect(() => {
@@ -108,33 +147,16 @@ const Fight = () => {
   if (!ledger) return <Loading />;
 
   const turnAction = (action: Stance) => async () => {
-    pure(ledger, turnKey)
-      .pipe(
-        rbind((k: DamlSheet.Sheet.Key, l: Ledger) =>
-          l
-            .fetchByKey(DamlSheet.Sheet, k)
-            .then((a) => a?.contractId),
-        ),
-        rbind(assert_id$('Sheet not found')),
-        rbind((cid, l) =>
-          pure(l, cid).pipe(
-            changeStance(action),
-            extractCreatedExertion,
-            fmap((_, r) => [r.contractId, r.payload]),
-            lbind((cid, sheet) =>
-              pure(l, sheet).pipe(suffer(cid)),
-            ),
-          ),
-        ),
-        snd$,
-        snd$,
-      )
-      .subscribe((e) => {
-        const sheet = e;
-        console.log(sheet);
+    const id = await ledger.fetchByKey(
+      DamlSheet.Sheet,
+      coTurnKey,
+    );
 
-        set({[turnSheetName]: sheet, turn: !turn});
-      });
+    if (!id) return;
+
+    pure(ledger, turnKey)
+      .pipe(actionPipe(action, id.contractId, turnSheetName))
+      .subscribe((changes) => set({turn: !turn, ...changes}));
   };
 
   return (
@@ -165,9 +187,7 @@ const Fight = () => {
 
           pure(ledger, oKey)
             .pipe(
-              tap(console.log),
               deleteSheet,
-              tap(console.log),
               tap(() => {
                 set({ownerSheet: undefined});
                 window.location.replace('/');

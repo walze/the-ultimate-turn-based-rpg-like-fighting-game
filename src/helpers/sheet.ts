@@ -65,11 +65,14 @@ export const isKeyValid = (key: Sheet.Sheet.Key) =>
   key._1 && key._2._1 && key._2._2;
 
 export const changeStance = (action: Sheet.Stance) =>
-  rbind(
-    (cid: ContractId<Sheet.Sheet>, l: Ledger) =>
-      l.exercise(Sheet.Sheet.ChangeStance, cid, {
-        action,
-      }) as ExerciseFixer<Sheet.Sheet>,
+  pipe(
+    rbind(
+      (cid: ContractId<Sheet.Sheet>, l: Ledger) =>
+        l.exercise(Sheet.Sheet.ChangeStance, cid, {
+          action,
+        }) as ExerciseFixer<Sheet.Sheet>,
+    ),
+    extractCreatedExertion,
   );
 
 export const findSheet = pipe(

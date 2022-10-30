@@ -1,10 +1,13 @@
 import {Sheet as DSheet} from '@daml.js/daml-project';
 import {
+  ClockIcon,
   EyeDropperIcon,
   HeartIcon,
+  PlayIcon,
   Squares2X2Icon,
 } from '@heroicons/react/20/solid';
 import {ReactNode} from 'react';
+import {useStore} from '../helpers/store';
 import Loading from './Loading';
 
 type StatProps = {
@@ -26,6 +29,11 @@ type Props = {
 };
 
 const Sheet = (props: Props) => {
+  const store = useStore();
+  const turnSheet = store.turn
+    ? store.ownerSheet
+    : store.foeSheet;
+
   const {sheet} = props;
 
   if (!sheet) return <Loading label="sheet" />;
@@ -33,14 +41,26 @@ const Sheet = (props: Props) => {
   const {
     name,
     hp,
-    role: {weapon, hp: thp},
+    role: {weapon},
     stance,
   } = sheet;
+
+  const thisTurn = turnSheet?.name === name;
 
   return (
     <article className="w-full mx-auto max-w-lg overflow-hidden bg-white rounded-lg shadow-lg">
       <div className="flex items-center px-6 py-3 bg-gray-900">
-        <h2 className="text-lg font-bold text-white">{name}</h2>
+        <h2
+          className={css(
+            'text-lg text-white',
+            thisTurn ? 'font-extrabold' : 'font-semibold',
+          )}
+        >
+          {thisTurn && (
+            <PlayIcon className="inline w-4 mr-1 -mt-0.5" />
+          )}
+          {name}
+        </h2>
       </div>
 
       <div className="px-6 py-3.5 pb-6">

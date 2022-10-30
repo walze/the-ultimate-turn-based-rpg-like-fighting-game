@@ -39,7 +39,7 @@ export type rbind = <A, B, C>(
   f: (b: B, c: A) => ObservableInput<C>,
 ) => (p: Pair<A, B>) => Pair<A, C>;
 
-export type bbind = <A, B, C, D>(
+export type bind = <A, B, C, D>(
   f: (b: A, d: B) => Pair<C, D>,
 ) => (p: Pair<A, B>) => Pair<C, D>;
 
@@ -72,7 +72,7 @@ export const rbind: rbind = (f) => (p) =>
     ),
   );
 
-export const bbind: bbind = (f) => (p) =>
+export const bind: bind = (f) => (p) =>
   p.pipe(concatMap(([a, b]) => f(a, b)));
 
 export const fbind: fbind = (f) => (p) =>
