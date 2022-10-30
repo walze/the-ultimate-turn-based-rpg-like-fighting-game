@@ -1,6 +1,6 @@
 import {config} from 'dotenv';
 import {defineConfig} from 'vite';
-import react from '@vitejs/plugin-react';
+import {svelte} from '@sveltejs/vite-plugin-svelte';
 
 import pkg from './package.json';
 
@@ -13,43 +13,16 @@ const target = 'chrome100';
 const isContainer = typeof process.env['DOCKER'] !== 'undefined';
 const host = isContainer ? 'host.docker.internal' : '0.0.0.0';
 
-const plugins = [
-  react({
-    jsxRuntime: 'automatic',
-    fastRefresh: true,
-  }),
-];
+const plugins = [svelte({})];
 
 const server = {
   host: true,
-  proxy: {
-    '/name': {
-      target: 'https://names.drycodes.com',
-      changeOrigin: true,
-      rewrite: (path) => path.replace(/^\/name/, ''),
-    },
-    '/api': {
-      target: `http://${host}:7575`,
-      changeOrigin: true,
-      headers: {
-        'reverse-proxy': 'vite',
-      },
-      rewrite: (path) => path.replace(/^\/api/, ''),
-    },
-    '/ws': {
-      target: `ws://${host}:6865`,
-      changeOrigin: true,
-      ws: true,
-      rewrite: (path) => path.replace(/^\/ws/, ''),
-    },
-  },
 };
 
 const optimizeDeps = {
   esbuildOptions: {
     target,
   },
-  include: ['@daml.js/daml-project'],
 };
 
 const esbuild = {
@@ -58,7 +31,6 @@ const esbuild = {
 
 const build = {
   commonjsOptions: {
-    include: [/\@daml\.js\/daml\-project/, /node_modules/],
     transformMixedEsModules: true,
   },
   modulePreload: {
