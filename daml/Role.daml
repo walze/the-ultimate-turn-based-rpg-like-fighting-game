@@ -1,6 +1,8 @@
 
 module Role where
 
+base_mod = 50.0
+
 data Role = Role
   { weapon : Text
   , ad : Decimal
@@ -8,7 +10,6 @@ data Role = Role
   , hp : Decimal
   } deriving (Eq, Show)
 
-base_mod = 50.0
 
 makeRole n = Role n . (* base_mod) . (* base_mod) . (* base_mod)
 

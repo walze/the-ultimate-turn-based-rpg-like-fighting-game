@@ -15,6 +15,7 @@ export interface State {
     [key in Party]: string | undefined;
   };
 
+  /** whether it's the owners turn or not */
   turn: boolean;
 
   master: string;

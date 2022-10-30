@@ -22,12 +22,12 @@ export const Dagger = makeRole('Dagger', 6, 4, 1);
 
 export const ROLES = [Sword, Dagger];
 
-export const getToken = (party: string[]) => {
+export const getToken = (actAs: string[]) => {
   const data = {
     'https://daml.com/ledger-api': {
       ledgerId: 'sandbox',
       applicationId: 'daml-project',
-      actAs: ['participant_admin', ...party],
+      actAs,
       admin: true,
     },
   };

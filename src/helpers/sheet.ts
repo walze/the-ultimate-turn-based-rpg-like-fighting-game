@@ -1,7 +1,7 @@
 import {Sheet} from '@daml.js/daml-project';
 import type Ledger from '@daml/ledger';
 import {ContractId} from '@daml/types';
-import {of, lastValueFrom, pipe} from 'rxjs';
+import {of, pipe, tap} from 'rxjs';
 import {ROLES} from '../config';
 import {acceptSheetCreate} from './action';
 import assert_id from './assert_id';
@@ -15,13 +15,12 @@ export const createSheet = (
   masterID: string,
   sheet: SheetCreate,
 ) =>
-  rbind((name: string, l: Ledger) =>
-    of([l, name] as const).pipe(
+  rbind((party: string, l: Ledger) =>
+    of([l, party] as const).pipe(
       findParty,
       rmap(assert_id('Found to party to create sheet with')),
       rmap((party) => ({
         ...sheet,
-        name,
         master: masterID,
         owner: party.identifier,
       })),

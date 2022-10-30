@@ -5,7 +5,7 @@ WORKDIR /app
 
 RUN npm i -g npm pnpm
 
-COPY daml.js/ daml.js/
+COPY @daml.js/ @daml.js/
 COPY package.json pnpm-lock.yaml ./
 
 RUN pnpm i --frozen-lockfile
@@ -22,7 +22,7 @@ WORKDIR /app
 
 EXPOSE 3000
 
-CMD ["pnpm", "dev:server"]
+CMD ["pnpm", "dev:app:server"]
 
 #### --- CLIENT --- ####
 FROM install AS client
@@ -31,4 +31,4 @@ WORKDIR /app
 
 EXPOSE 5173
 
-CMD ["pnpm", "dev:client"]
+CMD ["pnpm", "dev:app:client"]
