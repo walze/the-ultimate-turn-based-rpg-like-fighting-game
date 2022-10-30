@@ -3,6 +3,7 @@ import Ledger from '@daml/ledger';
 import {ContractId} from '@daml/types';
 import {pipe} from 'rxjs';
 import {rbind} from './BiFunctor$';
+import {extractCreatedExertion} from './extractExertion';
 
 export const createAction = rbind(
   (sheet: Sheet.Sheet, l: Ledger) =>
@@ -32,4 +33,5 @@ export const suffer = (target: ContractId<Sheet.Sheet>) =>
           {target},
         ) as ExerciseFixer<Sheet.Sheet>,
     ),
+    extractCreatedExertion,
   );

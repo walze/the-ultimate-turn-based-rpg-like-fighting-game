@@ -18,6 +18,7 @@ export interface State {
   /** whether it's the owners turn or not */
   turn: boolean;
 
+  // party keys
   master: string;
   owner?: string;
   foe?: string;

@@ -35,7 +35,7 @@ const App: FC = () => {
   const [ledger, parties] =
     use$(
       () => of(uNames.filter(Boolean) as string[]).pipe(getMain),
-      uNames,
+      [master, owner, foe],
     ) || [];
 
   useEffect(() => {
@@ -43,7 +43,7 @@ const App: FC = () => {
     const [master, owner, foe] = parties;
 
     set({ledger, party: {master, owner, foe}});
-  }, [ledger, ...uNames]);
+  }, [ledger, master, owner, foe]);
 
   // this should not exist
   useEffect(() => {

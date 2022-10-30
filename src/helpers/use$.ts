@@ -1,12 +1,16 @@
 import {useState, useEffect, useMemo} from 'react';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 
-const use$ = <T>(f: () => Observable<T>, deps: any[]) => {
+const use$ = <T>(
+  f: () => T | Observable<T>,
+  deps: unknown[],
+) => {
   const [s, ss] = useState<T | null>(null);
   const $ = useMemo(() => f(), deps);
 
   useEffect(() => {
-    const sub = $?.subscribe(ss);
+    const o = $ instanceof Observable ? $ : of($);
+    const sub = o.subscribe(ss);
 
     return () => sub?.unsubscribe();
   }, [$]);

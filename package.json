@@ -28,7 +28,7 @@
     }
   },
   "dependencies": {
-    "@daml.js/daml-project": "link:./@daml.js/daml-project-1.0.0",
+    "@daml.js/daml-project": "link:@daml.js/daml-project-1.0.0",
     "@daml/ledger": "latest",
     "@daml/types": "latest",
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",

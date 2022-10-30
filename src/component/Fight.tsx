@@ -1,7 +1,7 @@
 import Ledger from '@daml/ledger';
 import {Sheet as DamlSheet} from '@daml.js/daml-project';
 import {useEffect} from 'react';
-import {lastValueFrom, map, mergeMap, of, pipe, tap} from 'rxjs';
+import {catchError, map, of, pipe, tap} from 'rxjs';
 import slugify from 'slugify';
 import Button from '../form/Button';
 import {pure, rbind, rmap, snd$} from '../helpers/BiFunctor$';
@@ -23,50 +23,44 @@ import {
   EyeDropperIcon,
   ShieldExclamationIcon,
 } from '@heroicons/react/20/solid';
-import {extractExertion} from '../helpers/extractExertion';
+import {extractCreatedExertion} from '../helpers/extractExertion';
 import {getName} from '../helpers/name-api';
 import use$ from '../helpers/use$';
+import {Stance} from '@daml.js/daml-project-1.0.0/lib/Sheet';
+import {suffer} from '../helpers/action';
 
-const getFoe = (l: Ledger, master: string) => {
-  const cached = localStorage.getItem('current_foe');
-  const slug = (s = '') => slugify(s).toLowerCase();
+const slug = (s = '') => slugify(s).toLowerCase();
 
-  console.log(l);
+const getFoe = (name: string, l: Ledger, master: string) => {
+  const createFoe = (name: string) =>
+    pipe(
+      rmap(slug),
+      tap(console.warn),
+      findOrCreate,
+      rmap((p) => p.identifier),
+      createSheet(master, randomSheetTemplate(name)),
+      snd$,
+    );
 
-  const sheet$ = cached
-    ? pure(l, key(master, cached, slug(cached))).pipe(findSheet)
-    : pure(l, undefined).pipe(
-        rbind(getName),
-        rbind((n, l) =>
-          pure(l, n).pipe(
-            rmap(slug),
-            findOrCreate,
-            snd$,
-            map((p) => p.identifier),
-          ),
-        ),
-        createSheet(master, randomSheetTemplate('whatever')),
+  return pure(l, slug(name)).pipe(
+    findOrCreate,
+    rmap((p) => key(master, name, p.identifier)),
+    findSheet,
+    assert$('Failed to find foe'),
+    catchError(() =>
+      pure(l, name).pipe(
+        createFoe(name),
         snd$,
-      );
-
-  return sheet$.pipe(assert$('Failed to get foe'));
-};
-
-const change = (stance: DamlSheet.Stance) =>
-  pipe(
-    rbind((k: DamlSheet.Sheet.Key, l: Ledger) =>
-      l
-        .fetchByKey(DamlSheet.Sheet, k)
-        .then((a) => a?.contractId),
+        map((a) => a.payload),
+      ),
     ),
-    rbind(assert_id$('Sheet not found')),
-    changeStance(stance),
-    extractExertion,
+    // assert$('get foe failed'),
   );
+};
 
 const Fight = () => {
   const store = useStore();
-  const {ledger, party, set, master, turn} = store;
+  const {ledger, party, set, turn} = store;
 
   const oKey = key(
     party.master || '',
@@ -80,24 +74,57 @@ const Fight = () => {
     party.foe || '',
   );
 
-  const foeSheet = use$(
-    () => (ledger ? getFoe(ledger, master) : of(null)),
-    [master],
-  );
+  const foe = use$(() => {
+    const cached = localStorage.getItem('current_foe');
+    if (cached) return of(cached);
 
-  console.log(foeSheet);
+    return getName().pipe(
+      tap((name) => localStorage.setItem('current_foe', name)),
+    );
+  }, []);
+
+  const foeSheet = use$(() => {
+    return ledger && party.foe && foe
+      ? getFoe(foe, ledger, party.master || '')
+      : of(null);
+  }, [ledger, foe, party.foe]);
 
   const turnKey = turn ? oKey : foKey;
-  const turnSheet = turn ? store.ownerSheet : store.foeSheet;
+  // const turnSheet = turn ? store.ownerSheet : store.foeSheet;
   const turnSheetName = turn ? 'ownerSheet' : 'foeSheet';
 
-  // useEffect(() => {
-  //   set({foeSheet: foeSheet ?? undefined});
-  // }, [foeSheet]);
+  console.log(store);
+
+  useEffect(() => {
+    foe && set({foe: slug(foe)});
+    foeSheet && set({foeSheet: foeSheet});
+  }, [foeSheet, foe]);
 
   if (!ledger) return <Loading />;
 
-  console.log(foKey);
+  const turnAction = (action: Stance) => async () => {
+    pure(ledger, turnKey)
+      .pipe(
+        rbind((k: DamlSheet.Sheet.Key, l: Ledger) =>
+          l
+            .fetchByKey(DamlSheet.Sheet, k)
+            .then((a) => a?.contractId),
+        ),
+        rbind(assert_id$('Sheet not found')),
+        changeStance(action),
+        extractCreatedExertion,
+        rbind((e, l) =>
+          pure(l, e.payload).pipe(suffer(e.contractId), snd$),
+        ),
+        snd$,
+      )
+      .subscribe((e) => {
+        const sheet = e.payload;
+        console.log(sheet);
+
+        set({[turnSheetName]: sheet, turn: !turn});
+      });
+  };
 
   return (
     <section className="flex flex-col gap-4">
@@ -106,47 +133,14 @@ const Fight = () => {
       <Sheet sheet={store.ownerSheet} />
 
       <div className="flex gap-4">
-        <Button
-          className="w-1/2"
-          onClick={async () => {
-            const id = await ledger
-              .fetchByKey(DamlSheet.Sheet, turnKey)
-              .then((a) => a?.contractId);
-
-            console.warn(id);
-
-            if (!id) return;
-
-            pure(ledger, turnKey)
-              .pipe(change('Attack'))
-              .subscribe((sheet) => {
-                console.log(sheet);
-
-                set({[turnSheetName]: sheet, turn: !turn});
-              });
-          }}
-        >
+        <Button className="w-1/2" onClick={turnAction('Attack')}>
           <EyeDropperIcon className="w-4 mr-2" />
           Attack
         </Button>
 
         <Button
           className="w-1/2"
-          onClick={async () => {
-            const id = await ledger
-              .fetchByKey(DamlSheet.Sheet, turnKey)
-              .then((a) => a?.contractId);
-
-            if (!id) return;
-
-            pure(ledger, turnKey)
-              .pipe(change('Defence'))
-              .subscribe((sheet) => {
-                console.log(sheet);
-
-                set({[turnSheetName]: sheet, turn: !turn});
-              });
-          }}
+          onClick={turnAction('Defence')}
         >
           <ShieldExclamationIcon className="w-4 mr-2" />
           Defend

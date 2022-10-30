@@ -6,7 +6,7 @@ import {log$} from './helpers/one-liners';
 import {PropsWithChildren} from 'react';
 import {AssertionError as AE} from './helpers/assert_id';
 import type {Event, User as U} from '@daml/ledger';
-import {Party} from '@daml/types';
+import {ContractId, Party} from '@daml/types';
 
 type Log$ = typeof log$;
 type Css = typeof css;
@@ -25,7 +25,7 @@ declare global {
   };
 
   export type ExerciseFixer<T extends object, R = any> = Promise<
-    [R, Event<T>[]]
+    [ContractId<T>, Event<T>[]]
   >;
 
   class AssertionError<T> extends AE<T> {}

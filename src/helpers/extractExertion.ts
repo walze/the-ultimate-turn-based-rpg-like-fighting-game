@@ -1,23 +1,24 @@
 import Ledger, {Event} from '@daml/ledger';
 import {ContractId} from '@daml/types';
 import assert from 'assert';
-import {pipe, map, mergeMap} from 'rxjs';
-import {assert_id$} from './assert_id';
-import {Pair, snd$} from './BiFunctor$';
+import {Pair, rmap} from './BiFunctor$';
 
 type Exertion<T extends object> = Pair<
   Ledger,
   [ContractId<T>, Event<T>[]]
 >;
 
-export const extractExertion = pipe(
-  <M extends object>(a: Exertion<M>) => snd$(a),
-  snd$,
-  map((d) => d[1]),
-  mergeMap(assert_id$()),
-  map((a) => {
-    assert('created' in a, 'not created but archived');
+export const extractCreatedExertion = <M extends object>(
+  a: Exertion<M>,
+) =>
+  a.pipe(
+    rmap((ex) => {
+      const [, evs] = ex;
+      const ev = evs[evs.length - 1];
 
-    return a.created.payload;
-  }),
-);
+      assert(ev, 'falsy event');
+      assert('created' in ev, 'not created but archived');
+
+      return ev.created;
+    }),
+  );

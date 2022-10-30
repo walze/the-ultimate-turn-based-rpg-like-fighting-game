@@ -34,7 +34,7 @@ const Sheet = (props: Props) => {
   const {
     name,
     hp,
-    role: {ad, weapon},
+    role: {weapon},
     stance,
   } = sheet;
 
@@ -56,12 +56,6 @@ const Sheet = (props: Props) => {
             <EyeDropperIcon className="w-4 h-4 mr-1" />
             Weapon
             {weapon}
-          </Stat>
-
-          <Stat>
-            <ChartBarIcon className="w-4 h-4 mr-1" />
-            AD
-            {ad}
           </Stat>
 
           <Stat>

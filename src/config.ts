@@ -28,7 +28,7 @@ export const getToken = (actAs: string[]) => {
       ledgerId: 'sandbox',
       applicationId: 'daml-project',
       actAs,
-      admin: true,
+      readAs: actAs,
     },
   };
 

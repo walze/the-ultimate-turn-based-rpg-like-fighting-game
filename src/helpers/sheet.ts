@@ -6,7 +6,7 @@ import {ROLES} from '../config';
 import {acceptSheetCreate} from './action';
 import assert_id from './assert_id';
 import {rbind, rmap, snd$} from './BiFunctor$';
-import {extractExertion} from './extractExertion';
+import {extractCreatedExertion} from './extractExertion';
 import {findParty} from './user';
 
 export type SheetCreate = Omit<Sheet.Sheet, 'master' | 'owner'>;
@@ -25,7 +25,7 @@ export const createSheet = (
         owner: party.identifier,
       })),
       acceptSheetCreate,
-      extractExertion,
+      extractCreatedExertion,
     ),
   );
 
