@@ -1,27 +1,27 @@
 <script lang="ts">
+  import Button from './form/Button.svelte';
+  import Input from './form/Input.svelte';
+  import Sheet from './Sheet.svelte';
 </script>
 
-<main>
-  <div>
-    <a
-      href="https://vitejs.dev"
-      target="_blank"
-      rel="noreferrer"
-    >
-      <img src="/vite.svg" class="logo" alt="Vite Logo" />
-    </a>
-  </div>
-  <h1>Vite + Svelte</h1>
+<section
+  class="p-4 container flex flex-col gap-4 sm:mx-auto sm:w-full sm:max-w-md"
+>
+  <h1
+    class="mb-8 tracking-tight uppercase font-extrabold mt-6 text-center text-3xl text-gray-900"
+  >
+    The Ultimate Turn-Based RPG Like Fighting Game Deluxe Edition
+  </h1>
 
-  <p>
-    Check out <a
-      href="https://github.com/sveltejs/kit#readme"
-      target="_blank"
-      rel="noreferrer">SvelteKit</a
-    >, the official Svelte app framework powered by Vite!
-  </p>
+  <section>
+    <Input
+      name="name"
+      placeholder="Say your name"
+      label="Username"
+    />
 
-  <p class="read-the-docs">
-    Click on the Vite and Svelte logos to learn more
-  </p>
-</main>
+    <Button>BEGIN!</Button>
+  </section>
+
+  <Sheet hp="10" weapon="mace" stance="nice" name="willicus" />
+</section>

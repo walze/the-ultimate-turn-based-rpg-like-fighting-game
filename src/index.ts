@@ -1,5 +1,4 @@
 import assert from 'assert';
-import './App.scss';
 import App from './App.svelte';
 
 const target = document.querySelector('#root');

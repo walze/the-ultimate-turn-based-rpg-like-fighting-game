@@ -1,6 +1,9 @@
 {
   "include": [
     "src",
+    "node_modules/@types",
+    "package.json",
+    "vite.config.ts"
   ],
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig to read more about this file */

@@ -1,5 +1,5 @@
 import {config} from 'dotenv';
-import {defineConfig} from 'vite';
+import {BuildOptions, defineConfig} from 'vite';
 import {svelte} from '@sveltejs/vite-plugin-svelte';
 
 import pkg from './package.json';
@@ -9,9 +9,6 @@ const dependencies = [...Object.keys(pkg.dependencies)];
 config();
 
 const target = 'chrome100';
-
-const isContainer = typeof process.env['DOCKER'] !== 'undefined';
-const host = isContainer ? 'host.docker.internal' : '0.0.0.0';
 
 const plugins = [svelte({})];
 
@@ -29,7 +26,7 @@ const esbuild = {
   target,
 };
 
-const build = {
+const build: BuildOptions = {
   commonjsOptions: {
     transformMixedEsModules: true,
   },

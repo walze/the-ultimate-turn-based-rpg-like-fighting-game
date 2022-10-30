@@ -3,11 +3,7 @@
     "node_modules/*",
     "daml.js/*"
   ],
-  "settings": {
-    "react": {
-      "version": "detect" // React version. "detect" automatically picks the version you have installed.
-    }
-  },
+  "settings": {},
   "env": {
     "browser": true,
     "es2021": true,
@@ -15,7 +11,6 @@
   },
   "extends": [
     "eslint:recommended",
-    "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier"
   ],
@@ -27,7 +22,6 @@
     "project": "./tsconfig.json"
   },
   "plugins": [
-    "react",
     "@typescript-eslint",
     "prettier"
   ],
@@ -44,7 +38,6 @@
       "always-multiline"
     ],
     "@typescript-eslint/indent": "off",
-    "react/react-in-jsx-scope": "off",
     "indent": "off",
     "linebreak-style": [
       "error",
