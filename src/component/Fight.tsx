@@ -99,8 +99,8 @@ const actionPipe = (
         ),
       ),
     ),
-
     map(() => changes),
+    tap((e) => console.warn('action', e)),
   );
 };
 
@@ -153,6 +153,8 @@ const Fight = () => {
     );
 
     if (!id) return;
+
+    console.log('target', id);
 
     pure(ledger, turnKey)
       .pipe(actionPipe(action, id.contractId, turnSheetName))

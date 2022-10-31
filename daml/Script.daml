@@ -13,14 +13,16 @@ setup = script do
   let wallaceSheet = Sheet "Baracus Rex" 100 dagger wallace master Attack
   let goblinSheet = Sheet "Generic Goblin" 30 sword goblin master Attack
 
+  let wkey = (master, (wallaceSheet.name, wallace))
+
   gac <- submit master $ createCmd $ goblinSheet
 
-  wac <- submit wallace $ createCmd $ CharAction wallaceSheet
+  wac <- submit wallace $ createCmd $ CharAction wkey
   idw <- submit master
     $ exerciseCmd wac
-    $ Create_Accept
+    $ Create_Accept wallaceSheet
 
-  wac <- submit wallace $ createCmd $ CharAction wallaceSheet
+  wac <- submit wallace $ createCmd $ CharAction wkey
 
   submit master
     $ exerciseCmd wac
