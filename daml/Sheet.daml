@@ -42,10 +42,11 @@ template Sheet with
         controller master
         do
             assertMsg "Cannot suffer negative damage" $ damage >= 0
+            let rdamage = max 0 $ min (damage + (round role.dr)) damage
 
             create this with
                 hp = case stance of
                     -- completely arbitrary damage addition
-                    Attack -> hp - (damage - (round role.dr))
-                    Defence -> hp - damage
+                    Attack -> hp - damage
+                    Defence -> hp - rdamage
 

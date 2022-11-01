@@ -1,5 +1,6 @@
 tsc
 dist
+build
 /.daml
 /log
 navigator.log
