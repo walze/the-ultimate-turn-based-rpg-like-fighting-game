@@ -1,4 +1,3 @@
-import {Role} from '@daml.js/daml-project';
 import {mergeMap} from 'rxjs';
 import {fromFetch} from 'rxjs/fetch';
 
@@ -10,11 +9,11 @@ export const makeRole = (
   ad: number,
   dr: number,
   hp: number,
-): Role.Role => ({
+): Role => ({
   weapon,
-  ad: (BASE_MODIFIER / ad).toFixed(0),
-  dr: ((BASE_MODIFIER / ad) * dr).toFixed(0),
-  hp: (BASE_MODIFIER / hp).toFixed(0),
+  ad: +(BASE_MODIFIER / ad).toFixed(0),
+  dr: +((BASE_MODIFIER / ad) * dr).toFixed(0),
+  hp: +(BASE_MODIFIER / hp).toFixed(0),
 });
 
 export const Sword = makeRole('Sword', 10, 0.5, 1);

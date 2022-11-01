@@ -6,16 +6,11 @@
   "scripts": {
     "build": "concurrently --timings --kill-others 'pnpm:build:*'",
     "build:client": "vite build",
-    "build:daml": "daml build",
     "build:server": "tsc -p server/tsconfig.node.json",
     "clear": "rimraf dist node_modules build",
     "dev": "concurrently --kill-others 'pnpm:dev:app:*'",
     "dev:app:client": "vite",
     "dev:app:server": "pnpm build:server && nodemon ./build/server/index.js",
-    "dev:daml": "bash ./scripts/start-daml.bash",
-    "dev:daml:api": "daml json-api -c json-api-app.conf",
-    "dev:daml:codegen": "bash ./scripts/codegen.bash",
-    "dev:daml:sandbox": "daml sandbox",
     "logs": "docker compose logs -f",
     "prepare": "husky install",
     "preview": "vite preview",
@@ -28,9 +23,6 @@
     }
   },
   "dependencies": {
-    "@daml.js/daml-project": "link:./@daml.js/daml-project-1.0.0",
-    "@daml/ledger": "latest",
-    "@daml/types": "latest",
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
     "@headlessui/react": "^1.7.3",
     "@heroicons/react": "^2.0.12",

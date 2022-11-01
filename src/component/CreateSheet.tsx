@@ -1,57 +1,34 @@
-import {FormEvent} from 'react';
-import {of} from 'rxjs';
 import {useStore} from '../helpers/store';
 import {ROLES} from '../config';
 import Input from '../form/Input';
 import Select from '../form/Select';
-import {createSheet, SheetCreate} from '../helpers/sheet';
-import {snd$} from '../helpers/BiFunctor$';
-
-const formatSheet = (e: FormEvent<HTMLFormElement>) => {
-  const {currentTarget: f} = e;
-  e.preventDefault();
-
-  if (!f) return;
-  const ar = Array.from(f.elements) as HTMLInputElement[];
-  const inputs = Object.fromEntries(
-    ar.filter((e) => e.name).map((e) => [e.name, e.value]),
-  );
-  const name = inputs['name'];
-
-  const role = ROLES.find((r) => r.weapon === inputs['weapon']);
-
-  if (!role || !name) return;
-
-  const sheet: SheetCreate = {
-    name,
-    hp: role.hp,
-    role: role,
-    stance: 'Defence',
-  };
-
-  return sheet;
-};
+import {makeSheet} from '../helpers/sheet';
 
 const CreateSheet = () => {
-  const {party, ledger, set} = useStore();
-  const {master, owner} = party;
+  const store = useStore();
+
+  console.log(store);
 
   return (
     <form
       className="[&>*]:mb-4"
       onSubmit={(e) => {
-        const sheet = formatSheet(e);
-        if (!master || !owner || !ledger || !sheet) return;
+        e.preventDefault();
+        const form = e.target as HTMLFormElement;
+        const data = Object.fromEntries(
+          // @ts-expect-error idk
+          new FormData(form),
+        );
 
-        of([ledger, owner] as const)
-          .pipe(createSheet(master, sheet), snd$)
-          .subscribe((e) =>
-            set({
-              ownerSheet: e.payload,
-            }),
-          );
+        const player = makeSheet(data['name'], data['weapon']);
+
+        store.set({
+          player,
+        });
       }}
     >
+      <h1>name your Character</h1>
+
       <Input
         autoFocus
         label="Name"

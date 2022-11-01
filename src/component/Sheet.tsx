@@ -1,6 +1,4 @@
-import {Sheet as DSheet} from '@daml.js/daml-project';
 import {
-  ClockIcon,
   EyeDropperIcon,
   HeartIcon,
   PlayIcon,
@@ -25,14 +23,12 @@ const Stat = ({children: [icon, stat, value]}: StatProps) => (
 );
 
 type Props = {
-  sheet?: DSheet.Sheet;
+  sheet?: CharacterSheet;
 };
 
 const Sheet = (props: Props) => {
   const store = useStore();
-  const turnSheet = store.turn
-    ? store.ownerSheet
-    : store.foeSheet;
+  const turnSheet = store.turn ? store.player : store.foe;
 
   const {sheet} = props;
 
