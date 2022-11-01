@@ -5,10 +5,7 @@ import {catchError, map, mergeMap, of, pipe, tap} from 'rxjs';
 import slugify from 'slugify';
 import Button from '../form/Button';
 import {
-  bind,
-  fmap,
   lbind,
-  lmap,
   pure,
   rbind,
   rmap,
@@ -23,7 +20,7 @@ import {
   createSheet,
   findSheet,
 } from '../helpers/sheet';
-import {State, StateFN, useStore} from '../helpers/store';
+import {State, useStore} from '../helpers/store';
 import {findOrCreate} from '../helpers/user';
 import Loading from './Loading';
 import Sheet from './Sheet';
@@ -32,7 +29,6 @@ import {
   EyeDropperIcon,
   ShieldExclamationIcon,
 } from '@heroicons/react/20/solid';
-import {extractCreatedExertion} from '../helpers/extractExertion';
 import {getName} from '../helpers/name-api';
 import use$ from '../helpers/use$';
 import {Stance} from '@daml.js/daml-project-1.0.0/lib/Sheet';
@@ -59,7 +55,6 @@ const getFoe = (name: string, l: Ledger, master: string) => {
     catchError(() =>
       pure(l, name).pipe(
         createFoe(name),
-        snd$,
         map((a) => a.payload),
       ),
     ),
