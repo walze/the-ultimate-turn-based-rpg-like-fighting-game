@@ -15,12 +15,12 @@ setup = script do
 
   gac <- submit master $ createCmd $ goblinSheet
 
-  wac <- submit wallace $ createCmd $ CharAction master wallace wallaceSheet.name
+  wac <- submit wallace $ createCmd $ CharAction wallaceSheet
   idw <- submit master
     $ exerciseCmd wac
-    $ Create_Accept wallaceSheet
+    $ Create_Accept
 
-  wac <- submit wallace $ createCmd $ CharAction master wallace wallaceSheet.name
+  wac <- submit wallace $ createCmd $ CharAction wallaceSheet
 
   submit master
     $ exerciseCmd wac

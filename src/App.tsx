@@ -55,16 +55,6 @@ const App: FC = () => {
     if (!master || !foe) return;
 
     ledger
-      .create(CharAction.CharAction, {
-        master,
-        owner:
-          '1220fc9626df40440429b05b18685ec5a440ace038788a59d4627a824bd04caa8ca3',
-        name: 'nice',
-      })
-      .then(console.warn)
-      .catch(console.warn);
-
-    ledger
       .grantUserRights(master, [
         UserRightHelper.participantAdmin,
         UserRightHelper.canActAs(foe),

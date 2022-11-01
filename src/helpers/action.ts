@@ -6,22 +6,21 @@ import {rbind} from './BiFunctor$';
 import {extractCreatedExertion} from './extractExertion';
 
 export const createAction = rbind(
-  (key: CharAction.CharAction, l: Ledger) =>
-    l.create(CharAction.CharAction, key),
+  (sheet: Sheet.Sheet, l: Ledger) =>
+    l.create(CharAction.CharAction, {sheet}),
 );
 
-export const acceptSheetCreate = (sheet: Sheet.Sheet) =>
-  pipe(
-    createAction,
-    rbind(
-      (a, l) =>
-        l.exercise(
-          CharAction.CharAction.Create_Accept,
-          a.contractId,
-          {sheet},
-        ) as ExerciseFixer<Sheet.Sheet>,
-    ),
-  );
+export const acceptSheetCreate = pipe(
+  createAction,
+  rbind(
+    (a, l) =>
+      l.exercise(
+        CharAction.CharAction.Create_Accept,
+        a.contractId,
+        {},
+      ) as ExerciseFixer<Sheet.Sheet>,
+  ),
+);
 
 export const suffer = (target: ContractId<Sheet.Sheet>) =>
   pipe(

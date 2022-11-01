@@ -40,14 +40,7 @@ export const createSheet = (
         master: masterID,
         owner: party.identifier,
       })),
-      rbind((sheet, l) => {
-        const k = key(sheet.master, sheet.name, sheet.owner);
-
-        console.log('createSheet', sheet);
-
-        return acceptSheetCreate(sheet)(pure(l, k));
-      }),
-      snd$,
+      acceptSheetCreate,
       extractCreatedExertion,
       snd$,
     ),
