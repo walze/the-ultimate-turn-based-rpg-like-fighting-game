@@ -1,4 +1,4 @@
-import {map} from 'rxjs';
+import {map, tap} from 'rxjs';
 import {ROLES} from '../config';
 import {getName} from './name-api';
 
@@ -18,4 +18,5 @@ export const makeSheet = (name: string, weapon: string) => {
 
 export const getFoe = getName().pipe(
   map((name) => makeSheet(name, randomWeapon().weapon)),
+  tap((f) => localStorage.setItem('foe', JSON.stringify(f))),
 );

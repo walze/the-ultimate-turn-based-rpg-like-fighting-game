@@ -5,20 +5,9 @@ import {
   EyeDropperIcon,
   ShieldExclamationIcon,
 } from '@heroicons/react/20/solid';
-import {useEffect} from 'react';
-import use$ from '../helpers/use$';
-import {getFoe} from '../helpers/sheet';
 
 const Fight = () => {
   const store = useStore();
-  const foe = use$(() => getFoe, []);
-
-  useEffect(() => {
-    if (foe)
-      store.set({
-        foe,
-      });
-  }, [foe]);
 
   const target = store.turn ? 'foe' : 'player';
 

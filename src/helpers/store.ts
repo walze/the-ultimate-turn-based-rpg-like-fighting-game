@@ -16,7 +16,7 @@ export interface State {
 }
 
 export const useStore = create<State>((set, state) => ({
-  turn: false,
+  turn: true,
 
   attack: (who: 'player' | 'foe') => {
     const stt = state();

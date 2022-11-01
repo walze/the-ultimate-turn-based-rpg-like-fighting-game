@@ -7,8 +7,6 @@ import {makeSheet} from '../helpers/sheet';
 const CreateSheet = () => {
   const store = useStore();
 
-  console.log(store);
-
   return (
     <form
       className="[&>*]:mb-4"
@@ -22,17 +20,21 @@ const CreateSheet = () => {
 
         const player = makeSheet(data['name'], data['weapon']);
 
+        localStorage.setItem('player', JSON.stringify(player));
+
         store.set({
           player,
         });
       }}
     >
-      <h1>name your Character</h1>
+      <h1 className="uppercase font-semibold text-center text-xl text-gray-900">
+        Name your character
+      </h1>
 
       <Input
         autoFocus
         label="Name"
-        placeholder="Character name"
+        placeholder="Character Name"
       />
 
       <Select name="weapon" list={ROLES.map((r) => r.weapon)} />

@@ -1,7 +1,3 @@
-import {mergeMap} from 'rxjs';
-import {fromFetch} from 'rxjs/fetch';
-
-const domain = 'localhost';
 export const BASE_MODIFIER = 100;
 
 export const makeRole = (
@@ -16,28 +12,13 @@ export const makeRole = (
   hp: +(BASE_MODIFIER / hp).toFixed(0),
 });
 
-export const Sword = makeRole('Sword', 10, 0.5, 1);
-export const Dagger = makeRole('Dagger', 7, 0.1, 1);
+const Sword = makeRole('Sword', 10, 0.5, 1);
+const Dagger = makeRole('Dagger', 7, 0.1, 0.5);
+const Spear = makeRole('Spear', 5, 0.1, 1);
+const Bow = makeRole('Bow', 3, 0.1, 1);
+const Staff = makeRole('Staff', 1, 0.1, 1);
+const Shield = makeRole('Shield', 1, 0.1, 1);
 
-export const ROLES = [Sword, Dagger];
+export const ROLES = [Sword, Dagger, Spear, Bow, Staff, Shield];
 
 console.table(ROLES);
-
-export const getToken = (actAs: string[]) => {
-  const data = {
-    'https://daml.com/ledger-api': {
-      ledgerId: 'sandbox',
-      applicationId: 'daml-project',
-      actAs,
-      readAs: actAs,
-    },
-  };
-
-  return fromFetch(`http://${domain}:3000/token`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  }).pipe(mergeMap((r) => r.text()));
-};
