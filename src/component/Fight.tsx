@@ -6,14 +6,8 @@ import {
   ShieldExclamationIcon,
 } from '@heroicons/react/20/solid';
 import {useEffect} from 'react';
-import {map, mergeMap, pipe} from 'rxjs';
-import {getName} from '../helpers/name-api';
-import {makeSheet, randomWeapon} from '../helpers/sheet';
 import use$ from '../helpers/use$';
-
-const getFoe = getName().pipe(
-  map((name) => makeSheet(name, randomWeapon().weapon)),
-);
+import {getFoe} from '../helpers/sheet';
 
 const Fight = () => {
   const store = useStore();
@@ -26,6 +20,8 @@ const Fight = () => {
       });
   }, [foe]);
 
+  const target = store.turn ? 'foe' : 'player';
+
   return (
     <section className="flex flex-col gap-4">
       <Sheet sheet={store.foe} />
@@ -33,12 +29,22 @@ const Fight = () => {
       <Sheet sheet={store.player} />
 
       <div className="flex gap-4">
-        <Button className="w-1/2" onClick={console.log}>
+        <Button
+          className="w-1/2"
+          onClick={() => {
+            store.attack(target);
+          }}
+        >
           <EyeDropperIcon className="w-4 mr-2" />
           Attack
         </Button>
 
-        <Button className="w-1/2" onClick={console.log}>
+        <Button
+          className="w-1/2"
+          onClick={() => {
+            store.defend(target);
+          }}
+        >
           <ShieldExclamationIcon className="w-4 mr-2" />
           Defend
         </Button>

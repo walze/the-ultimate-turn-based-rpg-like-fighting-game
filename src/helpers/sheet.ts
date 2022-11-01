@@ -1,4 +1,6 @@
+import {map} from 'rxjs';
 import {ROLES} from '../config';
+import {getName} from './name-api';
 
 export const randomWeapon = () =>
   ROLES[Math.floor(Math.random() * ROLES.length)]!;
@@ -13,3 +15,7 @@ export const makeSheet = (name: string, weapon: string) => {
     stance: 'Defence',
   } as CharacterSheet;
 };
+
+export const getFoe = getName().pipe(
+  map((name) => makeSheet(name, randomWeapon().weapon)),
+);
