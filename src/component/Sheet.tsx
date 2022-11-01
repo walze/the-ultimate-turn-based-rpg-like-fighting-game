@@ -4,6 +4,7 @@ import {
   PlayIcon,
   Squares2X2Icon,
 } from '@heroicons/react/20/solid';
+import {capitalize} from 'lodash';
 import {ReactNode} from 'react';
 import {useStore} from '../helpers/store';
 import Loading from './Loading';
@@ -55,7 +56,10 @@ const Sheet = (props: Props) => {
           {thisTurn && (
             <PlayIcon className="inline w-4 mr-1 -mt-0.5" />
           )}
-          {name}
+          {capitalize(name)}
+          {thisTurn && (
+            <PlayIcon className="inline w-4 ml-1 -mt-0.5 rotate-180" />
+          )}
         </h2>
       </div>
 
