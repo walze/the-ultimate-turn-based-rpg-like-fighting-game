@@ -11,6 +11,9 @@ import Ledger, {UserRightHelper} from '@daml/ledger';
 import {findOrCreate} from './helpers/user';
 import SheetSelect from './component/SheetSelect';
 import Fight from './component/Fight';
+import {key} from './helpers/sheet';
+import {CharAction} from '@daml.js/daml-project';
+import {Party} from '@daml/types';
 
 export const getMain = pipe(
   getLedger,
@@ -50,6 +53,16 @@ const App: FC = () => {
     if (!ledger || !parties) return;
     const [master, foe] = parties;
     if (!master || !foe) return;
+
+    ledger
+      .create(CharAction.CharAction, {
+        master,
+        owner:
+          '1220fc9626df40440429b05b18685ec5a440ace038788a59d4627a824bd04caa8ca3',
+        name: 'nice',
+      })
+      .then(console.warn)
+      .catch(console.warn);
 
     ledger
       .grantUserRights(master, [

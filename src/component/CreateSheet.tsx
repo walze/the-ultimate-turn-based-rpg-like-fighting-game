@@ -45,9 +45,9 @@ const CreateSheet = () => {
 
         of([ledger, owner] as const)
           .pipe(createSheet(master, sheet), snd$)
-          .subscribe((ownerSheet) =>
+          .subscribe((e) =>
             set({
-              ownerSheet,
+              ownerSheet: e.payload,
             }),
           );
       }}

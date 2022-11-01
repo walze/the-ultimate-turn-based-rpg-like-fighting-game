@@ -24,8 +24,8 @@ declare global {
     className?: string;
   };
 
-  export type ExerciseFixer<T extends object, R = any> = Promise<
-    [ContractId<T>, Event<T>[]]
+  export type ExerciseFixer<T extends object> = Promise<
+    [ContractId<T>, Event<T, T['Key'], string>[]]
   >;
 
   class AssertionError<T> extends AE<T> {}

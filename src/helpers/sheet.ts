@@ -5,11 +5,27 @@ import {of, pipe, tap} from 'rxjs';
 import {ROLES} from '../config';
 import {acceptSheetCreate} from './action';
 import assert_id from './assert_id';
-import {rbind, rmap, snd$} from './BiFunctor$';
+import {pure, rbind, rmap, snd$} from './BiFunctor$';
 import {extractCreatedExertion} from './extractExertion';
 import {findParty} from './user';
 
 export type SheetCreate = Omit<Sheet.Sheet, 'master' | 'owner'>;
+
+export const key = (
+  master: string,
+  name: string,
+  identifier: string,
+): Sheet.Sheet.Key => ({
+  _1: master,
+  _2: {
+    _1: name,
+    _2: identifier,
+  },
+});
+
+// check they are all string and not empty
+export const isKeyValid = (key: Sheet.Sheet.Key) =>
+  key._1 && key._2._1 && key._2._2;
 
 export const createSheet = (
   masterID: string,
@@ -24,8 +40,16 @@ export const createSheet = (
         master: masterID,
         owner: party.identifier,
       })),
-      acceptSheetCreate,
+      rbind((sheet, l) => {
+        const k = key(sheet.master, sheet.name, sheet.owner);
+
+        console.log('createSheet', sheet);
+
+        return acceptSheetCreate(sheet)(pure(l, k));
+      }),
+      snd$,
       extractCreatedExertion,
+      snd$,
     ),
   );
 
@@ -47,22 +71,6 @@ export const randomSheetTemplate = (name: string) => {
 
   return sheet;
 };
-
-export const key = (
-  master: string,
-  name: string,
-  identifier: string,
-): Sheet.Sheet.Key => ({
-  _1: master,
-  _2: {
-    _1: name,
-    _2: identifier,
-  },
-});
-
-// check they are all string and not empty
-export const isKeyValid = (key: Sheet.Sheet.Key) =>
-  key._1 && key._2._1 && key._2._2;
 
 export const changeStance = (action: Sheet.Stance) =>
   pipe(

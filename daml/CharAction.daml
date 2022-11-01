@@ -3,14 +3,14 @@ module CharAction where
 import Sheet
 
 template CharAction with
-    key : Key
+    master : Party
+    owner : Party
+    name : Text
   where
-    signatory proposer
+    signatory owner
     observer master
-
-    let
-      proposer = snd $ snd key
-      master = fst key
+    key (master, (name, owner)) : Key
+    maintainer snd $ snd key
 
     choice Create_Accept : ContractId Sheet
       with
@@ -23,6 +23,6 @@ template CharAction with
       with target : SheetID
       controller master
       do
-        (id, sheet) <- fetchByKey @Sheet key
+        (id, sheet) <- fetchByKey @Sheet (master, (name, owner))
         let suffer = Suffer $ round sheet.role.ad
         exercise target suffer
