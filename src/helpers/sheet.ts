@@ -11,6 +11,7 @@ export const makeSheet = (name: string, weapon: string) => {
   return {
     name,
     role,
+    stacks: 0,
     hp: role?.hp,
     stance: 'Defence',
   } as CharacterSheet;

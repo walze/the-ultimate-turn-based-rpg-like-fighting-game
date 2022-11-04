@@ -13,7 +13,7 @@ export const makeRole = (
 });
 
 const Sword = makeRole('Sword', 10, 0.5, 1);
-const Dagger = makeRole('Dagger', 5, 0.1, 0.5);
+const Dagger = makeRole('Dagger', 4, 0.1, 0.5);
 const Spear = makeRole('Spear', 7, 0.1, 0.8);
 const Bow = makeRole('Bow', 3, 0.1, 0.4);
 const Staff = makeRole('Staff', 10, 0.1, 0.4);

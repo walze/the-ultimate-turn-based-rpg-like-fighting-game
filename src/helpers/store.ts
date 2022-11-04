@@ -21,11 +21,24 @@ export const useStore = create<State>((set, state) => ({
   attack: (who: 'player' | 'foe') => {
     const stt = state();
     const victim = stt[who];
-    const attacker = stt[who === 'player' ? 'foe' : 'player'];
+    const actor = stt[who === 'player' ? 'foe' : 'player'];
 
-    if (!victim || !attacker) return;
+    if (!victim || !actor) return;
 
-    victim.hp -= attacker.role.ad;
+    const damage = actor.role.ad * (actor.stacks || 1);
+
+    console.log({actor, victim});
+
+    victim.hp -=
+      victim.stance === 'Defence'
+        ? damage - victim.role.dr
+        : damage;
+
+    if (victim.stance === 'Defence')
+      victim.stacks = (victim.stacks || 0) + 1;
+
+    actor.stance = 'Attack';
+    actor.stacks = 0;
 
     set({
       [who]: victim,
@@ -36,11 +49,10 @@ export const useStore = create<State>((set, state) => ({
   defend: (who: 'player' | 'foe') => {
     const stt = state();
     const victim = stt[who];
-    const attacker = stt[who === 'player' ? 'foe' : 'player'];
+    const actor = stt[who === 'player' ? 'foe' : 'player'];
+    if (!victim || !actor) return;
 
-    if (!victim || !attacker) return;
-
-    victim.hp -= attacker.role.ad - victim.role.dr;
+    actor.stance = 'Defence';
 
     set({
       [who]: victim,

@@ -34,6 +34,7 @@ declare global {
   type CharacterSheet = {
     name: string;
     hp: number;
+    stacks: number;
     stance: 'Attack' | 'Defence';
     role: Role;
   };

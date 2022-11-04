@@ -38,6 +38,7 @@ const Sheet = (props: Props) => {
   const {
     name,
     hp,
+    stacks,
     role: {weapon},
     stance,
   } = sheet;
@@ -81,6 +82,12 @@ const Sheet = (props: Props) => {
             <Squares2X2Icon className="w-4 h-4 mr-1" />
             Stance
             {stance}
+          </Stat>
+
+          <Stat>
+            <Squares2X2Icon className="w-4 h-4 mr-1" />
+            Stacks
+            {stacks || 0}
           </Stat>
         </ul>
       </div>
